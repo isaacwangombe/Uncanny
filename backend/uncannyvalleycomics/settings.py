@@ -350,6 +350,7 @@ CSRF_TRUSTED_ORIGINS = [
     # "https://uncanny-valley-comics-backend.onrender.com",
     "http://localhost:8080",
     "http://127.0.0.1:8080",
+     "http://134.209.18.2",
 ]
 
 
