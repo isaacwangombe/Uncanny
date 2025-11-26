@@ -1,0 +1,19 @@
+.underline {
+  border-bottom: 2px solid black;
+}
+
+/* Position submenu to the right */
+.dropdown-submenu {
+  position: relative;
+}
+
+.dropdown-submenu > .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -5px;
+  display: none;
+}
+
+.dropdown-submenu:hover > .dropdown-menu {
+  display: block; /* Show submenu on hover */
+}

@@ -1,0 +1,139 @@
+.mona-sans-base {
+  font-family: "Mona Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  /* font-optical-sizing: auto;  */
+}
+.mona-sans-italic {
+  font-family: "Mona Sans", sans-serif;
+  font-weight: 800;
+  font-style: Italic;
+  /* font-optical-sizing: auto;  */
+}
+.inter {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.font-large {
+  font-size: 80px;
+}
+
+/* Base extra padding utilities */
+.px-6 {
+  padding-left: 4.5rem !important;
+  padding-right: 4.5rem !important;
+}
+.px-7 {
+  padding-left: 6rem !important;
+  padding-right: 6rem !important;
+}
+.px-8 {
+  padding-left: 8rem !important;
+  padding-right: 8rem !important;
+}
+.px-9 {
+  padding-left: 10rem !important;
+  padding-right: 10rem !important;
+}
+.px-10 {
+  padding-left: 15rem !important;
+  padding-right: 15rem !important;
+}
+
+/* Responsive versions (like Bootstrap's px-md-4 etc.) */
+@media (min-width: 576px) {
+  /* sm */
+  .px-sm-6 {
+    padding-left: 4.5rem !important;
+    padding-right: 4.5rem !important;
+  }
+  .px-sm-7 {
+    padding-left: 6rem !important;
+    padding-right: 6rem !important;
+  }
+  .px-sm-8 {
+    padding-left: 8rem !important;
+    padding-right: 8rem !important;
+  }
+}
+
+@media (min-width: 768px) {
+  /* md */
+  .px-md-6 {
+    padding-left: 4.5rem !important;
+    padding-right: 4.5rem !important;
+  }
+  .px-md-7 {
+    padding-left: 6rem !important;
+    padding-right: 6rem !important;
+  }
+  .px-md-8 {
+    padding-left: 8rem !important;
+    padding-right: 8rem !important;
+  }
+}
+
+@media (min-width: 992px) {
+  /* lg */
+  .px-lg-6 {
+    padding-left: 4.5rem !important;
+    padding-right: 4.5rem !important;
+  }
+  .px-lg-7 {
+    padding-left: 6rem !important;
+    padding-right: 6rem !important;
+  }
+  .px-lg-8 {
+    padding-left: 8rem !important;
+    padding-right: 8rem !important;
+  }
+  .px-lg-9 {
+    padding-left: 10rem !important;
+    padding-right: 10rem !important;
+  }
+
+  .mx-lg-9 {
+    margin-left: 10rem !important;
+    margin-right: 10rem !important;
+  }
+
+  .px-lg-10 {
+    padding-left: 15rem !important;
+    padding-right: 15rem !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  /* xl */
+  .px-xl-6 {
+    padding-left: 4.5rem !important;
+    padding-right: 4.5rem !important;
+  }
+  .px-xl-7 {
+    padding-left: 6rem !important;
+    padding-right: 6rem !important;
+  }
+  .px-xl-8 {
+    padding-left: 8rem !important;
+    padding-right: 8rem !important;
+  }
+}
+
+@media (min-width: 1400px) {
+  /* xxl */
+  .px-xxl-6 {
+    padding-left: 4.5rem !important;
+    padding-right: 4.5rem !important;
+  }
+  .px-xxl-7 {
+    padding-left: 6rem !important;
+    padding-right: 6rem !important;
+  }
+  .px-xxl-8 {
+    padding-left: 8rem !important;
+    padding-right: 8rem !important;
+  }
+}

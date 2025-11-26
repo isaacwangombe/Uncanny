@@ -1,0 +1,28 @@
+/* src/index.css */
+body {
+  background: #fff;
+  color: #111;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+.card {
+  border-radius: 10px;
+}
+
+h4 {
+  letter-spacing: 0.02em;
+}
+
+/* minimal product title */
+.card .card-title {
+  font-size: 1rem;
+}
+
+.card {
+  height: auto;
+}
+
+/* subtle shadow for product grid */
+.shadow-sm {
+  box-shadow: 0 6px 18px rgba(12, 12, 12, 0.05) !important;
+}

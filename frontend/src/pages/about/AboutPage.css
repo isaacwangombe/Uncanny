@@ -1,0 +1,42 @@
+.about-hero {
+  position: relative;
+  color: white;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 1;
+}
+
+.about-section {
+  background: #f9f9f9;
+}
+
+.about-page a {
+  color: #ffb703;
+  text-decoration: none;
+}
+
+.about-page a:hover {
+  text-decoration: underline;
+}
+
+.about-contact {
+  background: #000;
+  color: #fff;
+}
+
+.about-contact .form-control {
+  border-radius: 10px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #fff;
+}
+
+.about-contact .form-control:focus {
+  background: #222;
+  border-color: #ffb703;
+  box-shadow: 0 0 0 0.2rem rgba(255, 183, 3, 0.25);
+}

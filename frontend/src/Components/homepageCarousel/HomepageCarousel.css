@@ -1,0 +1,81 @@
+/* Hero wrapper: fixed height */
+.carousel-hero {
+  height: 400px;
+  position: relative; /* anchor captions */
+}
+
+.font-large {
+  font-size: 30px !important;
+}
+
+@media (min-width: 768px) {
+  .carousel-hero {
+    height: 500px;
+  }
+
+  .font-large {
+    font-size: 60px !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .carousel-hero {
+    height: 700px;
+  }
+  .font-large {
+    font-size: 70px !important;
+  }
+}
+
+/* Each item fills hero height */
+.carousel-hero .carousel-item {
+  height: 100%;
+}
+
+/* Make sure the carousel itself respects height */
+.carousel-hero .carousel-inner {
+  height: 100%;
+  border-radius: 20px;
+}
+
+/* Image fits inside hero height */
+.carousel-hero .carousel-item img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+.carousel-hero .carousel-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4); /* black overlay, 40% opacity */
+  z-index: 1; /* sits above image */
+}
+
+/* Caption pinned bottom-left */
+.carousel-hero .carousel-caption {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  text-align: left;
+  width: auto;
+  max-width: 50%;
+  color: #fff;
+  z-index: 5;
+}
+
+.carousel-hero .carousel-caption h3,
+.carousel-hero .carousel-caption p {
+  margin: 0;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.75);
+  font-size: clamp(1rem, 2vw, 2rem);
+}
+
+.btn-wide {
+  width: 200px;
+}

@@ -1,0 +1,261 @@
+/************************************************************
+ *  APPLE-STYLE ADMIN THEME (Dashboard, Users, Products, etc.)
+ *  Soft shadows — White cards — Rounded everything — Clean UI
+ ************************************************************/
+
+/* ----------------------------------------------------------
+   GLOBAL LAYOUT
+---------------------------------------------------------- */
+body {
+  background-color: #f5f5f7 !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+    "SF Pro Text", "Inter", sans-serif;
+  color: #111;
+}
+
+/* Ensure content does not become squashed */
+.container,
+.container-fluid {
+  min-width: 0 !important;
+}
+
+/* ----------------------------------------------------------
+   SIDEBAR
+---------------------------------------------------------- */
+.admin-sidebar {
+  background: #ffffff;
+  border-right: 1px solid #e5e5e7;
+  width: 230px;
+  padding: 2rem 1.5rem;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.04);
+}
+
+.admin-sidebar h5 {
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: #111;
+  margin-bottom: 2rem;
+}
+
+.admin-sidebar .nav-link {
+  padding: 0.75rem 1rem !important;
+  margin-bottom: 6px;
+  border-radius: 12px;
+  font-size: 15px;
+  color: #555 !important;
+  transition: 0.2s ease;
+}
+
+.admin-sidebar .nav-link.active {
+  background: #e9e9eb !important;
+  color: #111 !important;
+  font-weight: 600;
+}
+
+.admin-sidebar .nav-link:hover {
+  background: #f2f2f3 !important;
+  color: #000 !important;
+}
+
+/* ----------------------------------------------------------
+   CARDS (Apple-style)
+---------------------------------------------------------- */
+.card {
+  background: #ffffff !important;
+  border: none !important;
+  border-radius: 18px !important; /* Apple-soft */
+  padding: 0.35rem 0.35rem;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.06) !important;
+}
+
+.card-body {
+  padding: 1.5rem 1.8rem !important;
+}
+
+/* ----------------------------------------------------------
+   TABLES
+---------------------------------------------------------- */
+table {
+  background: white !important;
+  border-radius: 14px !important;
+  overflow: hidden;
+  border: none;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+table thead th {
+  background: #f7f7f8 !important;
+  font-weight: 600 !important;
+  color: #333 !important;
+  border-bottom: 1px solid #e3e3e5 !important;
+  padding: 14px !important;
+}
+
+table tbody td {
+  border-color: #f0f0f1 !important;
+  padding: 14px !important;
+  vertical-align: middle !important;
+}
+
+/* Hover row */
+table tbody tr:hover {
+  background: #fafafa !important;
+}
+
+/* ----------------------------------------------------------
+   BUTTONS
+---------------------------------------------------------- */
+.btn {
+  border-radius: 10px !important;
+  font-weight: 500 !important;
+  padding: 0.45rem 1rem !important;
+}
+
+.btn-primary {
+  background-color: #0a84ff !important;
+  border-color: #0a84ff !important;
+}
+
+.btn-outline-primary {
+  color: #0a84ff !important;
+  border-color: #0a84ff !important;
+}
+
+.btn-outline-primary:hover {
+  background: #0a84ff !important;
+  color: #fff !important;
+}
+
+/* Danger */
+.btn-outline-danger {
+  border-color: #ff453a !important;
+  color: #ff453a !important;
+}
+.btn-outline-danger:hover {
+  background: #ff453a !important;
+  color: #fff !important;
+}
+
+/* Secondary subtle buttons */
+.btn-outline-secondary {
+  border-color: #8e8e93 !important;
+  color: #444 !important;
+}
+.btn-outline-secondary:hover {
+  background: #8e8e93 !important;
+  color: white !important;
+}
+
+/* ----------------------------------------------------------
+   BADGES
+---------------------------------------------------------- */
+.badge {
+  padding: 0.45em 0.7em;
+  border-radius: 8px !important;
+}
+
+.badge-primary {
+  background-color: #0a84ff !important;
+}
+
+.badge-secondary {
+  background-color: #8e8e93 !important;
+}
+
+.badge-success {
+  background-color: #30d158 !important;
+}
+
+.badge-warning {
+  background-color: #ffd60a !important;
+  color: #000 !important;
+}
+
+.badge-danger {
+  background-color: #ff453a !important;
+}
+
+.badge-info {
+  background-color: #64d2ff !important;
+}
+
+/* ----------------------------------------------------------
+   INPUTS & SELECTS
+---------------------------------------------------------- */
+.form-control,
+.form-select {
+  border-radius: 14px !important;
+  padding: 0.65rem 0.9rem !important;
+  border-color: #d1d1d6 !important;
+  transition: 0.2s ease;
+  background: #ffffff !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+  outline: none !important;
+  border-color: #0a84ff !important;
+  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.25) !important;
+}
+
+/* ----------------------------------------------------------
+   MODALS
+---------------------------------------------------------- */
+.modal-content {
+  border-radius: 18px !important;
+  border: none !important;
+  background: #ffffff !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.14) !important;
+}
+
+.modal-header {
+  border-bottom: 1px solid #ececec !important;
+}
+
+.modal-footer {
+  border-top: 1px solid #ececec !important;
+}
+
+/* ----------------------------------------------------------
+   COLLAPSIBLE ELEMENTS (Customers list etc)
+---------------------------------------------------------- */
+.collapse {
+  transition: height 0.2s ease !important;
+}
+
+/* ----------------------------------------------------------
+   MINI LOADING SPINNER IMPROVED
+---------------------------------------------------------- */
+.spinner-border {
+  width: 2rem !important;
+  height: 2rem !important;
+  color: #0a84ff !important;
+}
+
+/* ----------------------------------------------------------
+   PIE LEGEND <details>
+---------------------------------------------------------- */
+details summary {
+  cursor: pointer;
+  padding: 8px;
+  background: #f2f2f7;
+  border-radius: 12px;
+  font-weight: 600;
+  color: #333;
+}
+
+details[open] summary {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+details ul {
+  background: #fff;
+  padding: 12px;
+  border-radius: 0 0 12px 12px;
+  border: 1px solid #eee;
+  border-top: none;
+}
