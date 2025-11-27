@@ -138,7 +138,6 @@ CLOUDINARY_CLOUD_NAME = os.getenv('CLOUDINARY_NAME')
 
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 ROOT_URLCONF = 'uncannyvalleycomics.urls'
@@ -226,6 +225,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -372,7 +374,6 @@ logging.getLogger("allauth").setLevel("DEBUG")
 logging.getLogger("allauth").addHandler(logging.StreamHandler())
 
 
-STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Base URL for links inside emails / QR codes
 SITE_URL = "http://127.0.0.1:8000"   # Local dev
