@@ -138,7 +138,7 @@ CLOUDINARY_CLOUD_NAME = os.getenv('CLOUDINARY_NAME')
 
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 ROOT_URLCONF = 'uncannyvalleycomics.urls'

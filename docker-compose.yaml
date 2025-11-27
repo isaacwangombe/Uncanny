@@ -20,7 +20,8 @@ services:
       - .env
     depends_on:
       - db
-
+    volumes:
+      - static_volume:/app/staticfiles
   nginx:
     build: ./frontend
     container_name: uvc_nginx

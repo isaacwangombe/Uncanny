@@ -3,6 +3,9 @@ FROM python:3.12-slim
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+# ✅ Ensure Django settings load inside the container
+ENV DJANGO_SETTINGS_MODULE=uncannyvalleycomics.settings
+
 WORKDIR /app
 
 # System deps
@@ -17,5 +20,8 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 COPY . .
+
+# ✅ Collect static files at build time
+RUN python manage.py collectstatic --noinput
 
 CMD ["gunicorn", "uncannyvalleycomics.wsgi:application", "--bind", "0.0.0.0:8000"]
