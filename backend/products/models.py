@@ -1,13 +1,14 @@
-# products/models.py
 from django.db import models
 import uuid
 from django.utils.text import slugify
 from django.core.validators import MinValueValidator
 from cloudinary.models import CloudinaryField
+from cloudinary.uploader import destroy
+from cloudinary.utils import cloudinary_url
 from decimal import Decimal
 from django.conf import settings
 
-# Hard-coded category IDs (per your request)
+# Hard-coded category IDs
 UPCOMING_CATEGORY_ID = 10
 PAST_CATEGORY_ID = 9
 
@@ -35,7 +36,6 @@ class Product(models.Model):
     is_active = models.BooleanField(default=True)
     sales_count = models.PositiveIntegerField(default=0)
 
-    # merged variant fields
     sku = models.CharField(max_length=80, blank=True, null=True)
     price = models.DecimalField(
         max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal("0.00"))]
@@ -57,7 +57,6 @@ class Product(models.Model):
         help_text="If set, this price is used instead of `price` for sales",
     )
 
-    # stock acts as capacity/seats for events
     stock = models.IntegerField(default=0)
     attributes = models.JSONField(blank=True, null=True)
     trending = models.BooleanField(default=False)
@@ -74,11 +73,13 @@ class Product(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
-        # auto-deactivate when out of stock
+
+        # Auto deactivate when out of stock
         if self.stock <= 0:
             self.is_active = False
         else:
             self.is_active = True
+
         super().save(*args, **kwargs)
 
 
@@ -91,9 +92,21 @@ class ProductImage(models.Model):
     def __str__(self):
         return f"Image for {self.product.title}"
 
-    def delete(self, *args, **kwargs):
-        from cloudinary.uploader import destroy
+    # ✅ WebP optimized URL (light compression, not visible to user)
+    def optimized_url(self):
+        if not self.image:
+            return None
 
+        url, _ = cloudinary_url(
+            self.image.public_id,
+            format="webp",
+            quality="auto:good",
+            fetch_format="auto",
+        )
+        return url
+
+    # ✅ Delete file from Cloudinary on delete
+    def delete(self, *args, **kwargs):
         if self.image and hasattr(self.image, "public_id"):
             destroy(self.image.public_id)
         super().delete(*args, **kwargs)
@@ -113,4 +126,3 @@ class EventExtension(models.Model):
 
     def __str__(self):
         return f"Event data for {self.product.title}"
-
