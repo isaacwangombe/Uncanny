@@ -375,6 +375,8 @@ SESSION_COOKIE_DOMAIN = None
 logging.getLogger("allauth").setLevel("DEBUG")
 logging.getLogger("allauth").addHandler(logging.StreamHandler())
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 20971520
+FILE_UPLOAD_MAX_MEMORY_SIZE = 20971520
 
 
 # Base URL for links inside emails / QR codes
@@ -382,3 +384,4 @@ SITE_URL = "http://127.0.0.1:8000"   # Local dev
 
 if not DEBUG:
     SITE_URL = "https://uncanny-valley-comics-backend.onrender.com"
+
