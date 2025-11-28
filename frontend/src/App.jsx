@@ -61,7 +61,7 @@ function AppContent() {
         <Route path="/about" element={<AboutPage />} />
 
         {/* Admin routes */}
-        <Route path="/admin/*" element={<AdminLayoutWrapper />} />
+        <Route path="/staff/*" element={<AdminLayoutWrapper />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
       </Routes>
       <ToastContainer position="top-right" autoClose={1200} />
