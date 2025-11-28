@@ -11,7 +11,7 @@ import {
 } from "react-bootstrap";
 
 import { getUsers, toggleStaff, promoteToOwner, api } from "../../apiAdmin";
-import { apiFetch } from "../../api"; // uses JWT & refresh
+import { apiFetch } from "../../api";
 import "../../styles/admin-theme.css";
 
 const UsersPage = () => {
@@ -32,11 +32,7 @@ const UsersPage = () => {
 
     const [userRes, visitorRes, currentRes] = await Promise.all([
       getUsers(),
-
-      // ✅ FIXED — uses apiFetch so it includes JWT token
       apiFetch("/admin/analytics/visitors/"),
-
-      // This axios call is fine because `api` attaches Authorization
       api.get("/auth/user/"),
     ]);
 
@@ -67,7 +63,7 @@ const UsersPage = () => {
     const query = e.target.value;
     setSearch(query);
 
-    if (query.trim().length === 0) {
+    if (!query.trim()) {
       setSearchCustomers([]);
       return;
     }
@@ -114,76 +110,95 @@ const UsersPage = () => {
   const renderTable = (title, users, allowActions = true) => (
     <>
       <h5 className="mt-4">{title}</h5>
-      {users.length > 0 ? (
-        <Table bordered hover responsive>
-          <thead>
-            <tr>
-              <th>Email</th>
-              <th>Username</th>
-              <th>Role</th>
-              <th>Status</th>
-              {allowActions && <th style={{ width: "200px" }}>Actions</th>}
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((u) => {
-              const canEdit =
-                allowActions &&
-                currentUser &&
-                (currentUser.is_superuser || currentUser.role === "Owner") &&
-                currentUser.pk !== u.pk;
 
-              return (
-                <tr key={u.id || u.pk}>
-                  <td>{u.email}</td>
-                  <td>{u.username}</td>
-                  <td>{u.role}</td>
-                  <td>{u.is_staff ? "✅ Staff" : "❌ User"}</td>
-                  {allowActions && (
-                    <td>
-                      {canEdit && (
-                        <Button
-                          variant={u.is_staff ? "warning" : "success"}
-                          size="sm"
-                          className="me-2"
-                          onClick={() => handleToggleStaff(u.id)}
-                        >
-                          {u.is_staff ? "Remove Staff" : "Make Staff"}
-                        </Button>
-                      )}
-                      {currentUser?.is_superuser && currentUser.pk !== u.pk && (
-                        <Button
-                          variant={u.role === "Owner" ? "secondary" : "info"}
-                          size="sm"
-                          onClick={() => handlePromoteOwner(u.id)}
-                        >
-                          {u.role === "Owner" ? "Remove Owner" : "Make Owner"}
-                        </Button>
-                      )}
+      {users.length > 0 ? (
+        <div className="table-responsive">
+          <Table bordered hover>
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Status</th>
+                {allowActions && <th>Actions</th>}
+              </tr>
+            </thead>
+
+            <tbody>
+              {users.map((u) => {
+                const canEdit =
+                  allowActions &&
+                  currentUser &&
+                  (currentUser.is_superuser || currentUser.role === "Owner") &&
+                  currentUser.pk !== u.pk;
+
+                return (
+                  <tr key={u.id || u.pk}>
+                    <td data-label="Email">{u.email}</td>
+                    <td data-label="Username">{u.username}</td>
+                    <td data-label="Role">{u.role}</td>
+                    <td data-label="Status">
+                      {u.is_staff ? "✅ Staff" : "❌ User"}
                     </td>
-                  )}
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
+
+                    {allowActions && (
+                      <td data-label="Actions">
+                        {canEdit && (
+                          <Button
+                            variant={u.is_staff ? "warning" : "success"}
+                            size="sm"
+                            className="me-2 mb-1"
+                            onClick={() => handleToggleStaff(u.id)}
+                          >
+                            {u.is_staff ? "Remove Staff" : "Make Staff"}
+                          </Button>
+                        )}
+
+                        {currentUser?.is_superuser &&
+                          currentUser.pk !== u.pk && (
+                            <Button
+                              variant={
+                                u.role === "Owner" ? "secondary" : "info"
+                              }
+                              size="sm"
+                              className="mb-1"
+                              onClick={() => handlePromoteOwner(u.id)}
+                            >
+                              {u.role === "Owner"
+                                ? "Remove Owner"
+                                : "Make Owner"}
+                            </Button>
+                          )}
+                      </td>
+                    )}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+        </div>
       ) : (
         <p className="text-muted">No {title.toLowerCase()} found.</p>
       )}
     </>
   );
 
-  if (loading) return <Spinner animation="border" />;
+  if (loading)
+    return (
+      <div className="p-4 text-center">
+        <Spinner animation="border" />
+      </div>
+    );
 
   const showSuperadmins = currentUser && currentUser.is_superuser;
 
   return (
     <div className="p-4">
-      <Row className="align-items-center mb-3">
-        <Col>
+      <Row className="align-items-center mb-3 g-2">
+        <Col xs={12} md={6}>
           <h3>Users</h3>
         </Col>
-        <Col className="text-end">
+        <Col xs={12} md={6} className="text-md-end">
           <Badge bg="primary" className="me-2">
             Daily Visitors: {visitorStats.daily}
           </Badge>
@@ -191,8 +206,8 @@ const UsersPage = () => {
         </Col>
       </Row>
 
-      <Row className="mb-3">
-        <Col md={4}>
+      <Row className="mb-3 g-2">
+        <Col xs={12} md={4}>
           <Form.Control
             placeholder="Search by username or email..."
             value={search}
@@ -227,8 +242,11 @@ const UsersPage = () => {
         <Collapse in={showCustomers}>
           <div>
             <h5 className="mt-3">All Customers</h5>
+
             {loadingCustomers ? (
-              <Spinner animation="border" />
+              <div className="text-center py-3">
+                <Spinner animation="border" />
+              </div>
             ) : (
               <>
                 {customerResults.length > 0 ? (

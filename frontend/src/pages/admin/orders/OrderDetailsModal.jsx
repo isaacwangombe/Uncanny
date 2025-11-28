@@ -52,7 +52,13 @@ const OrderDetailsModal = ({ show, onHide, order, backendUrl }) => {
 
   return (
     <>
-      <Modal show={show} onHide={onHide} centered size="lg">
+      <Modal
+        show={show}
+        onHide={onHide}
+        centered
+        size="lg"
+        fullscreen="sm-down"
+      >
         <Modal.Header closeButton>
           <Modal.Title>Order Details — #{order.id}</Modal.Title>
         </Modal.Header>

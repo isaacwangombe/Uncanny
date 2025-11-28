@@ -17,3 +17,10 @@
 .dropdown-submenu:hover > .dropdown-menu {
   display: block; /* Show submenu on hover */
 }
+
+.cart-container {
+  display: flex;
+  margin-top: 5px;
+  margin-left: 5px;
+  justify-content: space-between;
+}

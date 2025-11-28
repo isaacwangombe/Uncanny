@@ -166,20 +166,35 @@ const Navbars = () => {
   /* -------------------- 🧩 UI -------------------- */
   return (
     <Navbar expand="lg" bg="white" className="px-3 py-2 underline">
-      <Container fluid>
+      <Container fluid className="d-flex flex-wrap align-items-center">
         <Navbar.Brand
-          className="order-1 order-lg-2 mx-lg-auto"
-          style={{ cursor: "pointer" }}
+          className="order-1 order-lg-2 mx-lg-auto d-flex align-items-center gap-2 flex-wrap"
+          style={{
+            cursor: "pointer",
+            maxWidth: "100%",
+          }}
           onClick={() => navigate("/")}
         >
           <img
             src={logo}
-            width="90"
-            height="60"
-            className="d-inline-block align-top"
+            width="70"
+            height="48"
+            className="d-inline-block align-top flex-shrink-0"
             alt="Uncanny Valley Comics"
           />
-          <span className="mona-sans-base fs-1">Uncanny Valley Comics</span>
+
+          <span
+            className="mona-sans-base fw-bold"
+            style={{
+              fontSize: "clamp(14px, 4vw, 22px)",
+              lineHeight: "1.2",
+              wordBreak: "break-word",
+              whiteSpace: "normal",
+              maxWidth: "100%",
+            }}
+          >
+            Uncanny Valley Comics
+          </span>
         </Navbar.Brand>
 
         <Navbar.Toggle
@@ -256,21 +271,6 @@ const Navbars = () => {
               </Button>
             </InputGroup>
 
-            <Button
-              variant="dark"
-              className="ms-2"
-              style={{
-                width: 44,
-                height: 44,
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              onClick={() => openCart()}
-            >
-              Cart
-            </Button>
-
             {showSuggestions && suggestions.length > 0 && (
               <div
                 style={{
@@ -320,34 +320,38 @@ const Navbars = () => {
             )}
           </Form>
 
-          {/* 👤 User / Login UI */}
-          <div className="ms-3 d-flex align-items-center">
-            {loadingUser ? (
-              <Spinner animation="border" size="sm" />
-            ) : user ? (
-              <div className="d-flex align-items-center gap-2">
-                <div className="text-end me-2">
-                  <div className="fw-semibold">
-                    {user.first_name || user.username || user.email}
+          <div className="cart-container">
+            <Button variant="dark" onClick={() => openCart()}>
+              🛒 Cart
+            </Button>
+            {/* 👤 User / Login UI */}
+            <div className="ms-3 d-flex align-items-center">
+              {loadingUser ? (
+                <Spinner animation="border" size="sm" />
+              ) : user ? (
+                <div className="d-flex align-items-center gap-2">
+                  <div className="text-end me-2">
+                    <div className="fw-semibold">
+                      {user.first_name || user.username || user.email}
+                    </div>
+                    <div className="small text-muted">{userRole}</div>
                   </div>
-                  <div className="small text-muted">{userRole}</div>
+                  <Button
+                    variant="outline-dark"
+                    size="sm"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </Button>
                 </div>
-                <Button variant="outline-dark" size="sm" onClick={handleLogout}>
-                  Logout
-                </Button>
-              </div>
-            ) : (
-              <div className="d-flex align-items-center gap-2">
-                <span className="text-muted small">Not logged in</span>
-                <Button
-                  variant="dark"
-                  size="sm"
-                  onClick={() => navigate("/login")}
-                >
-                  Login
-                </Button>
-              </div>
-            )}
+              ) : (
+                <div className="d-flex align-items-center gap-2">
+                  <Button variant="dark" onClick={() => navigate("/login")}>
+                    Login
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
         </Navbar.Collapse>
       </Container>

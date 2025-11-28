@@ -131,8 +131,8 @@ const MailingListPage = () => {
         </Col>
       </Row>
 
-      <Row className="mb-3 align-items-center">
-        <Col md={4}>
+      <Row className="mb-3 align-items-center g-2">
+        <Col xs={12} md={4}>
           <Form.Control
             placeholder="Search mailing list…"
             value={search}
@@ -140,7 +140,7 @@ const MailingListPage = () => {
           />
         </Col>
 
-        <Col md={8} className="text-end">
+        <Col xs={12} md={8} className="text-md-end">
           <Form.Check
             inline
             type="checkbox"
@@ -163,7 +163,7 @@ const MailingListPage = () => {
           <Spinner animation="border" />
         </div>
       ) : (
-        <Table bordered hover responsive>
+        <Table bordered hover responsive className="align-middle text-nowrap">
           <thead>
             <tr>
               <th>Select</th>

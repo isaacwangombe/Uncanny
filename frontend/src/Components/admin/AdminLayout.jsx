@@ -1,20 +1,36 @@
-// src/components/admin/AdminLayout.jsx
-import React from "react";
+import React, { useState } from "react";
 import Sidebar from "./Sidebar";
-import AdminNavbar from "./AdminNavbar";
 import { Container } from "react-bootstrap";
 import "../../styles/admin-theme.css";
+
 const AdminLayout = ({ children }) => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
-    <div className="d-flex" style={{ minHeight: "100vh" }}>
+    <div
+      className="d-flex"
+      style={{
+        minHeight: "100vh",
+        backgroundColor: "#f9f9f9",
+      }}
+    >
       {/* Sidebar */}
-      <Sidebar />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {/* Main Content */}
-      <div className="flex-grow-1" style={{ backgroundColor: "#f9f9f9" }}>
-        {/* <AdminNavbar /> */}
+      <div className="flex-grow-1 d-flex flex-column">
+        {/* Mobile top bar */}
+        <div className="d-md-none p-3 border-bottom bg-white d-flex justify-content-between align-items-center">
+          <button
+            className="btn btn-outline-secondary"
+            onClick={() => setSidebarOpen(true)}
+          >
+            ☰
+          </button>
+          <strong>Admin Panel</strong>
+        </div>
 
-        <Container fluid className="p-4">
+        <Container fluid className="p-3 p-md-4">
           {children}
         </Container>
       </div>

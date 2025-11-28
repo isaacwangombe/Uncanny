@@ -19,7 +19,7 @@ const EmailBlastModal = ({ show, onHide, onSend, selectedEmails = [] }) => {
   };
 
   return (
-    <Modal show={show} onHide={onHide} centered size="lg">
+    <Modal show={show} onHide={onHide} centered size="lg" fullscreen="sm-down">
       <Modal.Header closeButton>
         <Modal.Title>Email Blast</Modal.Title>
       </Modal.Header>

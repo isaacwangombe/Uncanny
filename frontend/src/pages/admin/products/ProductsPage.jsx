@@ -39,6 +39,7 @@ const ProductsPage = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const [showBulkUpload, setShowBulkUpload] = useState(false);
 
   const backendUrl = import.meta.env.VITE_API_URL_SHORT;
 
@@ -154,58 +155,84 @@ const ProductsPage = () => {
         </Col>
 
         <Col md={4} className="text-end">
-          <Form.Group className="mb-2">
-            <Form.Label>Excel File (.xlsx)</Form.Label>
-            <Form.Control
-              type="file"
-              accept=".xlsx"
-              onChange={(e) => setExcelFile(e.target.files[0])}
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-2">
-            <Form.Label>ZIP of Images (optional)</Form.Label>
-            <Form.Control
-              type="file"
-              accept=".zip"
-              onChange={(e) => setZipFile(e.target.files[0])}
-            />
-          </Form.Group>
-
-          <Button onClick={handleBulkUpload}>Upload Products</Button>
+          {/* Toggle button */}
           <Button
-            variant="secondary"
-            className="mt-2"
-            onClick={async () => {
-              try {
-                const blob = await downloadSampleExcel();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = "sample_products.xlsx";
-                a.click();
-                window.URL.revokeObjectURL(url);
-              } catch (err) {
-                console.error("Failed to download excel:", err);
-                alert("Could not download sample Excel.");
-              }
-            }}
+            variant="outline-primary"
+            className="mb-2"
+            onClick={() => setShowBulkUpload((s) => !s)}
           >
-            Download Sample Excel
+            {showBulkUpload ? "Hide Bulk Upload" : "Upload Bulk Products"}
           </Button>
+
+          {/* Hidden bulk upload panel */}
+          {showBulkUpload && (
+            <div className="mt-2 border rounded p-3 bg-light text-start">
+              {/* Download sample FIRST */}
+              <Button
+                variant="secondary"
+                className="w-100 mb-3"
+                onClick={async () => {
+                  try {
+                    const blob = await downloadSampleExcel();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "sample_products.xlsx";
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                  } catch (err) {
+                    console.error("Failed to download excel:", err);
+                    alert("Could not download sample Excel.");
+                  }
+                }}
+              >
+                Download Sample Excel
+              </Button>
+
+              {/* Excel file (REQUIRED) */}
+              <Form.Group className="mb-3">
+                <Form.Label>Excel File (.xlsx) *</Form.Label>
+                <Form.Control
+                  type="file"
+                  accept=".xlsx"
+                  onChange={(e) => setExcelFile(e.target.files[0])}
+                />
+              </Form.Group>
+
+              {/* ZIP (optional) */}
+              <Form.Group className="mb-3">
+                <Form.Label>ZIP of Images (optional)</Form.Label>
+                <Form.Control
+                  type="file"
+                  accept=".zip"
+                  onChange={(e) => setZipFile(e.target.files[0])}
+                />
+              </Form.Group>
+
+              {/* Upload button disabled until Excel selected */}
+              <Button
+                variant="primary"
+                className="w-100"
+                disabled={!excelFile}
+                onClick={handleBulkUpload}
+              >
+                Upload Products
+              </Button>
+            </div>
+          )}
         </Col>
       </Row>
 
       {/* Filters */}
-      <Row className="mb-3 g-2">
-        <Col md={3}>
+      <Row className="mb-3 g-2 flex-wrap">
+        <Col xs={12} md={3}>
           <Form.Control
             placeholder="Search..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </Col>
-        <Col md={2}>
+        <Col xs={12} md={2}>
           <Form.Select
             value={mainFilter}
             onChange={(e) => {
@@ -221,7 +248,7 @@ const ProductsPage = () => {
             ))}
           </Form.Select>
         </Col>
-        <Col md={2}>
+        <Col xs={12} md={2}>
           <Form.Select
             value={subFilter}
             onChange={(e) => setSubFilter(e.target.value)}
@@ -236,7 +263,7 @@ const ProductsPage = () => {
               ))}
           </Form.Select>
         </Col>
-        <Col md={2}>
+        <Col xs={12} md={2}>
           <Form.Select
             value={stockFilter}
             onChange={(e) => setStockFilter(e.target.value)}
@@ -246,7 +273,7 @@ const ProductsPage = () => {
             <option value="out">Out of Stock</option>
           </Form.Select>
         </Col>
-        <Col md={2}>
+        <Col xs={12} md={2}>
           <Form.Select
             value={trendingFilter}
             onChange={(e) => setTrendingFilter(e.target.value)}
@@ -256,7 +283,7 @@ const ProductsPage = () => {
             <option value="false">Not Trending</option>
           </Form.Select>
         </Col>
-        <Col md={3}>
+        <Col xs={12} md={3}>
           <Form.Select
             value={sortField + "-" + sortDirection}
             onChange={(e) => {

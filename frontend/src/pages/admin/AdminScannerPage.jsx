@@ -91,7 +91,7 @@ const AdminScannerPage = () => {
 
         html5qr.start(
           camId,
-          { fps: 10, qrbox: 250 },
+          { fps: 10, qrbox: { width: 220, height: 220 } },
           async (decodedText) => {
             if (busy) return;
             busy = true;
@@ -139,48 +139,46 @@ const AdminScannerPage = () => {
       : "bg-light";
 
   return (
-    <div className="container mt-5" style={{ maxWidth: "600px" }}>
+    <div className="container-fluid py-3 py-md-5">
       <div
-        className="card"
+        className="card mx-auto"
         style={{
           borderRadius: "20px",
-          padding: "30px",
+          padding: "20px",
+          maxWidth: "500px",
         }}
       >
         <h2
-          className="text-center mb-4"
+          className="text-center mb-3 mb-md-4"
           style={{
             fontWeight: "700",
-            fontSize: "26px",
-            letterSpacing: "-0.5px",
+            fontSize: "22px",
           }}
         >
           🎫 Ticket Scanner
         </h2>
 
-        {/* QR SCANNER BOX */}
+        {/* QR Scanner */}
         <div
           id="qr-reader"
           style={{
             width: "100%",
             borderRadius: "16px",
             overflow: "hidden",
-            boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
+            minHeight: "260px",
           }}
-        ></div>
+        />
 
-        {/* ERROR MESSAGE */}
         {error && (
           <p className="text-danger mt-3 text-center fw-semibold">{error}</p>
         )}
 
-        {/* RESULT BOX */}
         {result && (
           <div
-            className={`mt-4 p-3 text-center fw-semibold ${resultClass}`}
+            className={`mt-3 p-3 text-center fw-semibold ${resultClass}`}
             style={{
               borderRadius: "14px",
-              fontSize: "16px",
+              fontSize: "15px",
             }}
           >
             {result}

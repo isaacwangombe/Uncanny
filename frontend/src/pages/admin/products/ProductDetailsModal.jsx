@@ -27,7 +27,13 @@ const ProductDetailsModal = ({
 
   return (
     <>
-      <Modal show={show} onHide={onHide} centered size="lg">
+      <Modal
+        show={show}
+        onHide={onHide}
+        centered
+        size="lg"
+        fullscreen="sm-down"
+      >
         <Modal.Header closeButton>
           <Modal.Title>Product Details</Modal.Title>
         </Modal.Header>

@@ -42,18 +42,18 @@ const OrdersPage = () => {
 
   return (
     <Container className="py-4">
-      <Row className="align-items-center mb-3">
+      <Row className="align-items-center mb-3 g-2 flex-wrap">
         <Col>
           <h4>Orders</h4>
         </Col>
-        <Col md={3}>
+        <Col xs={12} md={3}>
           <Form.Control
             placeholder="Search by order ID or email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </Col>
-        <Col md={3}>
+        <Col xs={12} md={3}>
           <Form.Select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}

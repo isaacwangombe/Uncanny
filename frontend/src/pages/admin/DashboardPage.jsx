@@ -155,30 +155,36 @@ const DashboardPage = () => {
     <div className="dashboard-wrapper">
       <Container fluid className="dashboard-container">
         {/* Header */}
-        <div className="dashboard-header">
-          <div>
-            <h3 className="dashboard-title">Admin Dashboard</h3>
-            <div className="dashboard-subtitle">
-              Overview — {range === "all" ? "All time" : `Last ${range} days`}
-            </div>
-          </div>
-
-          <div className="dashboard-header-controls">
-            <div className="dashboard-pill">
-              Last updated: <strong>{new Date().toLocaleString()}</strong>
+        <div className="dashboard-header container-fluid px-0">
+          <div className="row align-items-start align-items-md-center gy-3">
+            {/* Left: Title + Subtitle */}
+            <div className="col-12 col-md-auto">
+              <h3 className="dashboard-title mb-1">Admin Dashboard</h3>
+              <div className="dashboard-subtitle">
+                Overview — {range === "all" ? "All time" : `Last ${range} days`}
+              </div>
             </div>
 
-            <Form.Select
-              className="dashboard-range-select"
-              value={range}
-              onChange={(e) => setRange(e.target.value)}
-            >
-              <option value="7">Last 7 Days</option>
-              <option value="30">Last 30 Days</option>
-              <option value="90">Last 90 Days</option>
-              <option value="365">Last 1 Year</option>
-              <option value="all">All Time</option>
-            </Form.Select>
+            {/* Right: Controls */}
+            <div className="col-12 col-md d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-md-end gap-2">
+              {/* Date range first on mobile */}
+              <Form.Select
+                className="dashboard-range-select w-100 w-md-auto"
+                value={range}
+                onChange={(e) => setRange(e.target.value)}
+              >
+                <option value="7">Last 7 Days</option>
+                <option value="30">Last 30 Days</option>
+                <option value="90">Last 90 Days</option>
+                <option value="365">Last 1 Year</option>
+                <option value="all">All Time</option>
+              </Form.Select>
+
+              {/* Last updated */}
+              <div className="dashboard-pill text-nowrap">
+                Last updated: <strong>{new Date().toLocaleString()}</strong>
+              </div>
+            </div>
           </div>
         </div>
 

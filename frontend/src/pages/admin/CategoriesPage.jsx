@@ -131,7 +131,7 @@ const CategoriesAdminPage = () => {
           <Spinner animation="border" />
         </div>
       ) : (
-        <Table bordered hover responsive>
+        <Table bordered hover responsive className="align-middle text-nowrap">
           <thead>
             <tr>
               <th style={{ width: "35%" }}>Name</th>
@@ -163,8 +163,8 @@ const CategoriesAdminPage = () => {
                           alt={cat.name}
                           onClick={() => setExpandedImage(cat.image_url)}
                           style={{
-                            width: "60px",
-                            height: "60px",
+                            width: "48px",
+                            height: "48px",
                             objectFit: "cover",
                             borderRadius: "6px",
                             border: "1px solid #ccc",
@@ -222,8 +222,8 @@ const CategoriesAdminPage = () => {
                             alt={sub.name}
                             onClick={() => setExpandedImage(sub.image_url)}
                             style={{
-                              width: "60px",
-                              height: "60px",
+                              width: "48px",
+                              height: "48px",
                               objectFit: "cover",
                               borderRadius: "6px",
                               border: "1px solid #ccc",

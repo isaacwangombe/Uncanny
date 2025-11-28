@@ -1,31 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { Button, Form, Table, Modal, Spinner } from "react-bootstrap";
-import { adminGetMessages, adminReplyToMessage } from "../../../apiAdmin"; // ⬅ NEW clean API
+import { adminGetMessages, adminReplyToMessage } from "../../../apiAdmin";
 
 const MessagesAdminPage = () => {
   const [messages, setMessages] = useState([]);
   const [filtered, setFiltered] = useState([]);
-
   const [search, setSearch] = useState("");
   const [groupByEmail, setGroupByEmail] = useState(false);
-
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-
   const [loading, setLoading] = useState(true);
 
-  // Reply modal
   const [showReply, setShowReply] = useState(false);
   const [activeMessage, setActiveMessage] = useState(null);
   const [replyBody, setReplyBody] = useState("");
   const [sendingReply, setSendingReply] = useState(false);
 
-  // Load messages
   async function load() {
     setLoading(true);
     try {
       const data = await adminGetMessages();
-
       const normalized = (data || []).map((m) => ({
         ...m,
         created_at:
@@ -47,11 +41,9 @@ const MessagesAdminPage = () => {
     load();
   }, []);
 
-  // Filtering logic
   useEffect(() => {
     let result = [...messages];
 
-    // Search filter
     if (search.trim() !== "") {
       const s = search.toLowerCase();
       result = result.filter(
@@ -63,7 +55,6 @@ const MessagesAdminPage = () => {
       );
     }
 
-    // Date filters
     if (startDate) {
       const sd = new Date(startDate + "T00:00:00Z");
       result = result.filter((m) => new Date(m.created_at) >= sd);
@@ -74,7 +65,6 @@ const MessagesAdminPage = () => {
       result = result.filter((m) => new Date(m.created_at) <= ed);
     }
 
-    // Group by email (newest message)
     if (groupByEmail) {
       const byEmail = new Map();
       result.forEach((m) => {
@@ -95,7 +85,6 @@ const MessagesAdminPage = () => {
     setFiltered(result);
   }, [search, startDate, endDate, groupByEmail, messages]);
 
-  // Reply actions
   const handleReply = (msg) => {
     setActiveMessage(msg);
     setReplyBody("");
@@ -109,7 +98,6 @@ const MessagesAdminPage = () => {
     try {
       await adminReplyToMessage(activeMessage.id, replyBody);
 
-      // Update only that message
       setMessages((prev) =>
         prev.map((m) =>
           m.id === activeMessage.id ? { ...m, replied: true } : m
@@ -132,36 +120,43 @@ const MessagesAdminPage = () => {
       <h2 className="fw-bold mb-4">📩 Contact Messages</h2>
 
       {/* Filters */}
-      <div className="d-flex gap-3 mb-4 flex-wrap">
+      {/* Filters */}
+      <div className="filters-toolbar mb-4">
         <Form.Control
           placeholder="Search email, name or message..."
-          style={{ width: 300 }}
+          className="flex-fill min-w-0"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
 
         <Form.Control
           type="date"
-          style={{ width: 180 }}
+          className="w-100 w-md-auto"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
         />
 
         <Form.Control
           type="date"
-          style={{ width: 180 }}
+          className="w-100 w-md-auto"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
         />
 
-        <Form.Check
-          type="switch"
-          label="Group by email"
-          checked={groupByEmail}
-          onChange={() => setGroupByEmail(!groupByEmail)}
-        />
+        <div className="d-flex align-items-center gap-2 w-100 w-md-auto">
+          <Form.Check
+            type="switch"
+            label="Group by email"
+            checked={groupByEmail}
+            onChange={() => setGroupByEmail(!groupByEmail)}
+          />
+        </div>
 
-        <Button variant="outline-secondary" onClick={load}>
+        <Button
+          variant="outline-secondary"
+          className="w-100 w-md-auto"
+          onClick={load}
+        >
           Refresh
         </Button>
       </div>
@@ -172,54 +167,62 @@ const MessagesAdminPage = () => {
           <Spinner animation="border" />
         </div>
       ) : (
-        <Table striped hover responsive>
-          <thead>
-            <tr>
-              <th>Email</th>
-              <th>Name</th>
-              <th style={{ minWidth: 320 }}>Message</th>
-              <th>Subscribed</th>
-              <th>Replied</th>
-              <th style={{ minWidth: 160 }}>Date</th>
-              <th></th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {filtered.map((m) => (
-              <tr key={m.id}>
-                <td>{m.email}</td>
-                <td>{`${m.first_name || ""} ${m.last_name || ""}`}</td>
-                <td style={{ maxWidth: 420, whiteSpace: "pre-wrap" }}>
-                  {m.message}
-                </td>
-                <td>{m.subscribed ? "✔" : "—"}</td>
-                <td>{m.replied ? "✔" : "—"}</td>
-
-                <td>
-                  {new Date(m.created_at).toLocaleString() || "Unknown date"}
-                </td>
-
-                <td>
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={() => handleReply(m)}
-                  >
-                    Reply
-                  </Button>
-                </td>
+        <div className="table-responsive">
+          <Table striped hover>
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Name</th>
+                <th>Message</th>
+                <th>Subscribed</th>
+                <th>Replied</th>
+                <th>Date</th>
+                <th></th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+
+            <tbody>
+              {filtered.map((m) => (
+                <tr key={m.id}>
+                  <td data-label="Email">{m.email}</td>
+                  <td data-label="Name">
+                    {`${m.first_name || ""} ${m.last_name || ""}`}
+                  </td>
+                  <td data-label="Message" style={{ whiteSpace: "pre-wrap" }}>
+                    {m.message}
+                  </td>
+                  <td data-label="Subscribed">{m.subscribed ? "✔" : "—"}</td>
+                  <td data-label="Replied">{m.replied ? "✔" : "—"}</td>
+                  <td data-label="Date">
+                    {new Date(m.created_at).toLocaleString() || "Unknown date"}
+                  </td>
+                  <td data-label="Actions">
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      onClick={() => handleReply(m)}
+                    >
+                      Reply
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
       )}
 
       {/* Reply Modal */}
-      <Modal show={showReply} onHide={() => setShowReply(false)}>
+      <Modal
+        show={showReply}
+        onHide={() => setShowReply(false)}
+        fullscreen="sm-down"
+        centered
+      >
         <Modal.Header closeButton>
           <Modal.Title>Reply to {activeMessage?.email}</Modal.Title>
         </Modal.Header>
+
         <Modal.Body>
           <Form.Control
             as="textarea"
@@ -229,6 +232,7 @@ const MessagesAdminPage = () => {
             onChange={(e) => setReplyBody(e.target.value)}
           />
         </Modal.Body>
+
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowReply(false)}>
             Cancel
