@@ -21,7 +21,7 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-# ✅ Collect static files at build time
-RUN python manage.py collectstatic --noinput
+# # ✅ Collect static files at build time
+# RUN python manage.py collectstatic --noinput
 
 CMD ["gunicorn", "--limit-request-body", "20971520", "--bind", "0.0.0.0:8000", "uncannyvalleycomics.wsgi:application"]
