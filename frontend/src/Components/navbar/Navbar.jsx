@@ -242,7 +242,7 @@ const Navbars = () => {
 
             {isStaff && (
               <Nav.Link
-                onClick={() => navigate("/admin/dashboard")}
+                onClick={() => navigate("/staff/dashboard")}
                 className="fw-bold text-danger"
               >
                 ADMIN
