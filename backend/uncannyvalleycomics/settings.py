@@ -377,7 +377,10 @@ logging.getLogger("allauth").addHandler(logging.StreamHandler())
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 20971520
 FILE_UPLOAD_MAX_MEMORY_SIZE = 20971520
-
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
+FILE_UPLOAD_HANDLERS = [
+    "django.core.files.uploadhandler.TemporaryFileUploadHandler",
+]
 
 # Base URL for links inside emails / QR codes
 SITE_URL = "http://127.0.0.1:8000"   # Local dev
