@@ -24,4 +24,4 @@ COPY . .
 # ✅ Collect static files at build time
 RUN python manage.py collectstatic --noinput
 
-CMD ["gunicorn", "uncannyvalleycomics.wsgi:application", "--bind", "0.0.0.0:8000", "--limit-request-body", "20971520"]
+CMD ["gunicorn", "--limit-request-body", "20971520", "--bind", "0.0.0.0:8000", "uncannyvalleycomics.wsgi:application"]
