@@ -25,4 +25,4 @@ COPY . .
 RUN python manage.py collectstatic --noinput
 
 # CMD ["gunicorn", "--bind", "0.0.0.0:8000", "uncannyvalleycomics.wsgi:application"]
-CMD ["gunicorn", "--worker-class", "gthread", "--threads", "4", "--timeout", "180", "--worker-connections", "1000", "--limit-request-line", "8190", "--limit-request-field_size", "8388608", "--bind", "0.0.0.0:8000", "uncannyvalleycomics.wsgi:application"]
+CMD ["gunicorn", "--worker-class", "gthread", "--threads", "4", "--timeout", "180", "--worker-connections", "1000", "--limit-request-line", "8190", "--limit-request-field_size", "8388608", "--limit-request-body", "52428800", "--bind", "0.0.0.0:8000", "uncannyvalleycomics.wsgi:application"]

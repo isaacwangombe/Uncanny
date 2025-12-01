@@ -13,29 +13,44 @@
   padding-bottom: 4px;
 }
 
-.tab-content-wrapper {
-  position: relative;
-  min-height: 450px; /* adjust to tallest content */
-}
-
-.fade-tab {
+/* .fade-tab {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   opacity: 0;
+  display: none;
+  visibility: hidden;
   transition: opacity 0.8s ease-in-out;
-  pointer-events: none; /* inactive tabs not interactable */
+  pointer-events: none; 
 }
 
 .fade-tab.show {
   opacity: 1;
+  display: block;
+  visibility: visible;
   pointer-events: auto;
+} */
+
+.fade-tab {
+  opacity: 0;
+  visibility: hidden;
+  height: 0;
+  overflow: hidden;
+  transition: opacity 0.4s ease, visibility 0s 0.4s, height 0.4s ease;
+}
+
+.fade-tab.show {
+  opacity: 1;
+  visibility: visible;
+  height: auto;
+  overflow: visible;
+  transition: opacity 0.4s ease, visibility 0s, height 0.4s ease;
 }
 
 .trending-now {
   background-color: rgb(238, 238, 238);
-  min-height: 790px;
+  /* min-height: 790px; */
 }
 
 .multicarousel-btn {

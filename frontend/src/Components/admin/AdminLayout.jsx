@@ -21,7 +21,7 @@ const AdminLayout = ({ children }) => {
       <div className="flex-grow-1 d-flex flex-column">
         {/* Mobile top bar */}
         <div className="d-md-none p-3 border-bottom bg-white d-flex justify-content-between align-items-center">
-          <button
+          <button d-md-block
             className="btn btn-outline-secondary"
             onClick={() => setSidebarOpen(true)}
           >

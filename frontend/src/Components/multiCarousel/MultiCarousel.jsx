@@ -7,29 +7,49 @@ import "./MultiCarousel.css";
 const MultiCarousel = ({ products = [] }) => {
   const responsive = useMemo(
     () => ({
-      desktop: { breakpoint: { max: 3000, min: 1024 }, items: 3 },
-      tablet: { breakpoint: { max: 1024, min: 600 }, items: 2 },
-      mobile: { breakpoint: { max: 599, min: 0 }, items: 1 },
+      desktop: {
+        breakpoint: { max: 3000, min: 1280 },
+        items: 4,
+        partialVisibilityGutter: 40,
+      },
+      laptop: {
+        breakpoint: { max: 1280, min: 1024 },
+        items: 3,
+        partialVisibilityGutter: 40,
+      },
+      tablet: {
+        breakpoint: { max: 1024, min: 600 },
+        items: 1.5,
+        partialVisibilityGutter: 60,
+      },
+      mobile: {
+        breakpoint: { max: 600, min: 0 },
+        items: 1.2,
+        partialVisibilityGutter: 50,
+      },
     }),
     []
   );
 
   return (
-    <div className="px-5">
+    <div>
       <Carousel
         responsive={responsive}
-        infinite={products.length > (responsive.desktop.items || 3)}
+        infinite={true}
+        arrows={true}
+        swipeable={true}
+        draggable={true}
+        partialVisible={true}
         autoPlaySpeed={2500}
         keyBoardControl={true}
         customTransition="all 0.5s ease"
         transitionDuration={500}
         containerClass="carousel-container"
-        removeArrowOnDeviceType={["mobile"]}
-        itemClass="px-3"
+        itemClass="carousel-item-padding"
       >
-        {products && products.length > 0 ? (
+        {products.length > 0 ? (
           products.map((product) => (
-            <div key={product.id} className="carousel-items">
+            <div key={product.id} className="carousel-item-wrapper">
               <CardHover product={product} />
             </div>
           ))
