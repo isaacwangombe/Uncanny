@@ -10,7 +10,6 @@ import logging
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
-from corsheaders.defaults import default_headers
 
 # =========================================================
 # BASE DIR + LOAD .env CORRECTLY (FIXED)
@@ -220,17 +219,8 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 # =========================================================
 # CORS / CSRF
 # =========================================================
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_HEADERS = list(default_headers) + [
-    "authorization",
-]
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5173",
-    "http://localhost:5173",
-    "http://staging.uncannyvalleycomics.com",
-    "https://staging.uncannyvalleycomics.com",
-    "http://134.209.18.2",
-]
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_HEADERS = ["content-type", "authorization"]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8080",
