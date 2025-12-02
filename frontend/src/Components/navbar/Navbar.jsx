@@ -55,16 +55,10 @@ const Navbars = () => {
   useEffect(() => {
     async function loadUser() {
       try {
-        console.log(
-          "🧠 Checking for token:",
-          localStorage.getItem("access_token")
-        );
         const currentUser = await fetchCurrentUser();
         if (currentUser) {
-          console.log("✅ User fetched:", currentUser);
           setUser(currentUser);
         } else {
-          console.log("⚠️ No logged-in user found");
           setUser(null);
         }
       } catch (err) {

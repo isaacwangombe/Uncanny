@@ -11,8 +11,6 @@ const AdminScannerPage = () => {
   // Process scanned UUID
   // -------------------------------
   const handleScan = async (decodedText) => {
-    console.log("🔍 RAW SCAN:", decodedText);
-
     // Extract UUID
     const uuidMatch = decodedText.match(
       /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/
@@ -25,7 +23,6 @@ const AdminScannerPage = () => {
     }
 
     const uuid = uuidMatch[0];
-    console.log("🎯 EXTRACTED UUID:", uuid);
 
     setResultType("neutral");
     setResult("⏳ Verifying…");

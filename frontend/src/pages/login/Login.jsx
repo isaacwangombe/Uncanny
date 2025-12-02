@@ -19,7 +19,6 @@ const Login = () => {
     try {
       // Try JWT login using username/email + password
       const data = await loginUser(email, password);
-      console.log("✅ Logged in:", data);
 
       // redirect after login
       window.location.href = "/admin/dashboard";
