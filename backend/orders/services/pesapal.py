@@ -9,12 +9,27 @@ class PesapalAPI:
 
     def get_token(self):
         url = f"{self.base}/api/Auth/RequestToken"
-        resp = requests.post(url, json={
+
+        payload = {
             "consumer_key": self.key,
             "consumer_secret": self.secret
-        })
-        resp.raise_for_status()
-        return resp.json()["token"]
+        }
+
+        resp = requests.post(url, json=payload)
+
+        # Debug print — VERY useful
+        try:
+            data = resp.json()
+        except:
+            raise Exception(f"Pesapal returned non-JSON: {resp.text}")
+
+        if "token" not in data:
+            raise Exception(
+                f"Pesapal token request failed. Response was: {data}"
+            )
+
+        return data["token"]
+
 
     def create_order(self, order, email, phone):
         token = self.get_token()
