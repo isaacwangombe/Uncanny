@@ -8,6 +8,7 @@ from rest_framework.permissions import (
     AllowAny,
 )
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from orders.services.pesapal import get_pesapal_api
 
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -262,7 +263,7 @@ class CartViewSet(viewsets.ViewSet):
 
         # Create Pesapal payment
         try:
-            payment_url = pesapal_api.create_order(
+            payment_url = get_pesapal_api.create_order(
                 cart,
                 email=shipping_address.get("email"),
                 phone=phone,
