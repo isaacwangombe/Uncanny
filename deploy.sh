@@ -1,13 +1,13 @@
 #!/bin/bash
 
+echo "📦 Starting deployment..."
+
 cd /root/Uncanny || exit 1
 
-git reset --hard
+echo "⬇️ Pulling latest changes from Git..."
 git pull origin main
 
-chmod +x deploy.sh
+echo "🔄 Restarting Gunicorn..."
+sudo systemctl restart gunicorn
 
-docker-compose down
-docker system prune -af
-docker-compose build
-docker-compose up -d
+echo "🚀 Deployment complete."

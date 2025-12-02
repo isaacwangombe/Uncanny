@@ -25,7 +25,6 @@ from .serializers import (
 
 from products.models import Product
 from .utils.qr import generate_qr_base64
-from orders.services.pesapal import pesapal_api
 import base64 as _b64
 
 
@@ -254,21 +253,34 @@ class CartViewSet(viewsets.ViewSet):
             cart.phone_number = phone
 
         cart.save(update_fields=["shipping_address", "phone_number", "user"])
-    # 🔥 ADD THESE DEBUG PRINTS HERE
-        import os
-        print("DEBUG: PESAPAL KEY =", os.getenv("PESAPAL_CONSUMER_KEY"))
-        print("DEBUG: PESAPAL SECRET =", os.getenv("PESAPAL_CONSUMER_SECRET"))
-        print("DEBUG: PESAPAL API INSTANCE KEY =", pesapal_api.key if hasattr(pesapal_api, 'key') else None)
-        print("DEBUG: PESAPAL BASE URL =", getattr(pesapal_api, 'base', None))
 
-        # Create Pesapal payment
+        # DEBUG: print environment values (only temporary)
+        import os
         try:
-            payment_url = get_pesapal_api.create_order(
+            print("DEBUG: PESAPAL ENV KEY =", os.getenv("PESAPAL_CONSUMER_KEY"))
+            print("DEBUG: PESAPAL ENV SECRET =", os.getenv("PESAPAL_CONSUMER_SECRET"))
+            # do not access pesapal_api at import-time; create instance below
+        except Exception:
+            pass
+
+        # Create Pesapal payment — instantiate the API client here
+        try:
+            pesapal = get_pesapal_api()
+        except Exception as e:
+            # fatal config error
+            return Response(
+                {"detail": f"Payment init failed: {str(e)}"},
+                status=500,
+            )
+
+        try:
+            payment_url = pesapal.create_order(
                 cart,
                 email=shipping_address.get("email"),
                 phone=phone,
             )
         except Exception as e:
+            # return the underlying error so you can see what failed
             return Response(
                 {"detail": f"Payment init failed: {str(e)}"},
                 status=500,
@@ -278,6 +290,7 @@ class CartViewSet(viewsets.ViewSet):
             {"payment_url": payment_url, "order_id": cart.id},
             status=200,
         )
+
 
 
 # =========================================================
