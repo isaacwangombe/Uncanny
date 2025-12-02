@@ -41,6 +41,9 @@ urlpatterns = [
     # Django Admin
     path("admin/", admin.site.urls),
 
+    #Payments
+    path("api/payments/pesapal/ipn/", pesapal_ipn, name="pesapal-ipn"),
+
     path("api/contact/", include(("contact.urls", "contact"))),
     path("api/events/verify/<uuid:code>/", verify_event_ticket, name="verify-ticket"),
     path("api/events/scan/<uuid:code>/", scan_ticket),

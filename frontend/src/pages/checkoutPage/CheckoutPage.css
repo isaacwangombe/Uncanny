@@ -1,0 +1,5 @@
+@media (max-width: 768px) {
+  .checkout-form {
+    height: auto !important;
+  }
+}

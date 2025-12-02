@@ -1,15 +1,15 @@
 .carousel-item-wrapper {
   width: 100%;
-  aspect-ratio: 4 / 5; /* 🔥 consistent height at ALL screen sizes */
+  aspect-ratio: 4 / 5;
   overflow: hidden;
   border-radius: 10px;
 }
 
-@media (max-width: 600px) {
+/* @media (max-width: 600px) {
   .card {
-    aspect-ratio: 3 / 4; /* taller on mobile */
+    aspect-ratio: 3 / 4; 
   }
-}
+} */
 /* Add spacing between items */
 .carousel-item-padding {
   padding: 0 12px;

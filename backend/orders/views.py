@@ -2,7 +2,11 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser, AllowAny
+from rest_framework.permissions import (
+    IsAuthenticatedOrReadOnly,
+    IsAdminUser,
+    AllowAny,
+)
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from django.shortcuts import get_object_or_404
@@ -20,10 +24,19 @@ from .serializers import (
 
 from products.models import Product
 from .utils.qr import generate_qr_base64
+from orders.services.pesapal import pesapal_api
+import base64 as _b64
 
 
+# =========================================================
+# ORDER VIEWSET
+# =========================================================
 class OrderViewSet(viewsets.ModelViewSet):
-    queryset = Order.objects.all().select_related("user").prefetch_related("items__product")
+    queryset = (
+        Order.objects.all()
+        .select_related("user")
+        .prefetch_related("items__product")
+    )
     serializer_class = OrderCreateSerializer
     authentication_classes = [JWTAuthentication]
 
@@ -39,6 +52,7 @@ class OrderViewSet(viewsets.ModelViewSet):
         response_serializer = OrderDetailSerializer(order)
         return Response(response_serializer.data, status=status.HTTP_201_CREATED)
 
+    # Manual admin operations
     @action(detail=True, methods=["post"])
     def pay(self, request, pk=None):
         order = self.get_object()
@@ -67,6 +81,9 @@ class OrderViewSet(viewsets.ModelViewSet):
             return Response({"detail": str(e)}, status=400)
 
 
+# =========================================================
+# CART VIEWSET (WITH PESA PAL PAYMENT)
+# =========================================================
 class CartViewSet(viewsets.ViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [AllowAny]
@@ -82,18 +99,24 @@ class CartViewSet(viewsets.ViewSet):
 
         if user:
             try:
-                user_cart = Order.objects.get(user=user, status=Order.Status.PENDING)
+                user_cart = Order.objects.get(
+                    user=user, status=Order.Status.PENDING
+                )
             except Order.DoesNotExist:
                 user_cart = None
 
             try:
-                session_cart = Order.objects.get(session_key=session_key, status=Order.Status.PENDING)
+                session_cart = Order.objects.get(
+                    session_key=session_key, status=Order.Status.PENDING
+                )
             except Order.DoesNotExist:
                 session_cart = None
 
             if user_cart and session_cart and user_cart.id != session_cart.id:
                 for item in session_cart.items.all():
-                    existing = user_cart.items.filter(product=item.product).first()
+                    existing = user_cart.items.filter(
+                        product=item.product
+                    ).first()
                     if existing:
                         existing.quantity += item.quantity
                         existing.save()
@@ -103,26 +126,35 @@ class CartViewSet(viewsets.ViewSet):
                 session_cart.delete()
 
             if not user_cart:
-                user_cart = Order.objects.create(user=user, session_key=session_key)
+                user_cart = Order.objects.create(
+                    user=user, session_key=session_key
+                )
 
             user_cart.session_key = session_key
             user_cart.user = user
             user_cart.save(update_fields=["session_key", "user"])
             return user_cart
 
+        # guest user
         try:
-            return Order.objects.get(session_key=session_key, status=Order.Status.PENDING)
+            return Order.objects.get(
+                session_key=session_key, status=Order.Status.PENDING
+            )
         except Order.DoesNotExist:
-            if create_if_missing:
-                return Order.objects.create(session_key=session_key)
-            return None
+            return (
+                Order.objects.create(session_key=session_key)
+                if create_if_missing
+                else None
+            )
 
+    # ------------------------------
     def list(self, request):
         cart = self._get_cart(request, create_if_missing=False)
         if not cart:
             return Response({"items": [], "total": 0}, status=200)
         return Response(CartSerializer(cart).data)
 
+    # ------------------------------
     @action(detail=False, methods=["post"])
     def add_item(self, request):
         cart = self._get_cart(request)
@@ -146,6 +178,7 @@ class CartViewSet(viewsets.ViewSet):
         cart.recalculate_total()
         return Response(CartSerializer(cart).data)
 
+    # ------------------------------
     @action(detail=False, methods=["post"], url_path="remove_item")
     def remove_item(self, request):
         cart = self._get_cart(request)
@@ -154,14 +187,16 @@ class CartViewSet(viewsets.ViewSet):
             item = cart.items.get(id=item_id)
             item.delete()
             cart.recalculate_total()
+            return Response(CartSerializer(cart).data)
         except OrderItem.DoesNotExist:
             return Response({"error": "Item not in cart"}, status=404)
-        return Response(CartSerializer(cart).data)
 
+    # ------------------------------
     @action(detail=False, methods=["post"])
     def decrease_item(self, request):
         cart = self._get_cart(request)
         product_id = request.data.get("product_id")
+
         try:
             item = cart.items.get(product_id=product_id)
         except OrderItem.DoesNotExist:
@@ -176,6 +211,7 @@ class CartViewSet(viewsets.ViewSet):
         cart.recalculate_total()
         return Response(CartSerializer(cart).data)
 
+    # ------------------------------
     @action(detail=False, methods=["post"])
     def increase_item(self, request):
         cart = self._get_cart(request)
@@ -196,6 +232,9 @@ class CartViewSet(viewsets.ViewSet):
         cart.recalculate_total()
         return Response(CartSerializer(cart).data)
 
+    # =====================================================
+    # CHECKOUT → CREATE PESA PAL ORDER (NO PROCESS_PAYMENT)
+    # =====================================================
     @action(detail=False, methods=["post"])
     def checkout(self, request):
         cart = self._get_cart(request)
@@ -204,79 +243,119 @@ class CartViewSet(viewsets.ViewSet):
             return Response({"detail": "Your cart is empty."}, status=400)
 
         shipping_address = request.data.get("shipping_address", {}) or {}
-        phone_number = request.data.get("phone_number")
+        phone = request.data.get("phone_number")
 
         if request.user.is_authenticated:
             cart.user = request.user
 
         cart.shipping_address = shipping_address
-        if phone_number:
-            cart.phone_number = phone_number
+        if phone:
+            cart.phone_number = phone
 
         cart.save(update_fields=["shipping_address", "phone_number", "user"])
 
+        # Create Pesapal payment
         try:
-            cart.process_payment()
-        except ValueError as e:
-            return Response({"detail": str(e)}, status=400)
+            payment_url = pesapal_api.create_order(
+                cart,
+                email=shipping_address.get("email"),
+                phone=phone,
+            )
+        except Exception as e:
+            return Response(
+                {"detail": f"Payment init failed: {str(e)}"},
+                status=500,
+            )
 
-        # Checkout email ALWAYS takes priority
-        recipient_email = shipping_address.get("email") or (
-            cart.user.email if cart.user else None
+        return Response(
+            {"payment_url": payment_url, "order_id": cart.id},
+            status=200,
         )
 
-        if not recipient_email:
-            return Response({"detail": "No email available"}, status=400)
 
-        # Build all ticket attachments
-        attachments = []
-        import base64 as _b64
+# =========================================================
+# PESA PAL IPN — CONFIRMS PAYMENT + ISSUES TICKETS
+# =========================================================
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def pesapal_ipn(request):
+    data = request.data
+    order_id = data.get("OrderTrackingId") or data.get("order_id")
+    status_str = data.get("status", "").lower()
 
-        for item in cart.items.all():
-            for ticket in item.tickets.all():
-                qr_url = f"{settings.SITE_URL.rstrip('/')}/api/events/verify/{ticket.code}/"
-                b64 = generate_qr_base64(qr_url)
-                png = _b64.b64decode(b64)
-                attachments.append((f"ticket-{ticket.code}.png", png, "image/png"))
+    if not order_id:
+        return Response({"detail": "Missing order ID"}, status=400)
 
-        # Build email body
-        html_lines = ["<h3>Your Tickets</h3>", "<ul>"]
-        for item in cart.items.all():
-            if item.tickets.exists():
-                html_lines.append(f"<li>{item.product.title} × {item.quantity}</li>")
-        html_lines.append("</ul>")
-        html_body = "\n".join(html_lines)
+    order = Order.objects.filter(id=order_id).first()
+    if not order:
+        return Response({"detail": "Order not found"}, status=404)
 
-        email = EmailMessage(
-            subject=f"Your Tickets from {settings.SITE_URL}",
-            body=html_body,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            to=[recipient_email],
-        )
-        email.content_subtype = "html"
+    if status_str != "completed":
+        return Response({"detail": "Payment pending or failed"}, status=200)
 
-        for name, data, mime in attachments:
-            email.attach(name, data, mime)
+    # Payment confirmed: mark PAID + create tickets
+    order.process_payment()
 
-        email.send(fail_silently=False)
+    # Send tickets
+    email = (
+        order.shipping_address.get("email")
+        or (order.user.email if order.user else None)
+    )
+    if email:
+        _send_order_tickets(order, email)
 
-        return Response({
-            "detail": "Checkout successful!",
-            "order_id": cart.id,
-        }, status=200)
+    return Response({"detail": "Payment confirmed & tickets emailed."})
 
 
-# --------------------------------------------------------------------
-# FIXED & CLEAN VERIFY EVENT TICKET ENDPOINT
-# --------------------------------------------------------------------
+# =========================================================
+# UTILITY: SEND ORDER TICKETS
+# =========================================================
+def _send_order_tickets(order, recipient_email):
+    attachments = []
+
+    for item in order.items.all():
+        for ticket in item.tickets.all():
+            qr_url = f"{settings.SITE_URL.rstrip('/')}/api/events/verify/{ticket.code}/"
+            b64 = generate_qr_base64(qr_url)
+            png = _b64.b64decode(b64)
+            attachments.append(
+                (f"ticket-{ticket.code}.png", png, "image/png")
+            )
+
+    html_lines = ["<h3>Your Tickets</h3>", "<ul>"]
+    for item in order.items.all():
+        if item.tickets.exists():
+            html_lines.append(
+                f"<li>{item.product.title} × {item.quantity}</li>"
+            )
+    html_lines.append("</ul>")
+    html_body = "\n".join(html_lines)
+
+    email = EmailMessage(
+        subject=f"Your Tickets from {settings.SITE_URL}",
+        body=html_body,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[recipient_email],
+    )
+    email.content_subtype = "html"
+
+    for name, data, mime in attachments:
+        email.attach(name, data, mime)
+
+    email.send(fail_silently=False)
+
+
+# =========================================================
+# TICKET VERIFY + SCAN ENDPOINTS
+# =========================================================
 @api_view(["GET"])
 @permission_classes([IsAdminUser])
 def verify_event_ticket(request, code):
-    print("🎫 VERIFY ENDPOINT HIT")
-    print("Raw code:", code)
-
-    ticket = EventTicket.objects.filter(code=code)\
-        .select_related("order_item__product").first()
+    ticket = (
+        EventTicket.objects.filter(code=code)
+        .select_related("order_item__product")
+        .first()
+    )
 
     if not ticket:
         return Response({"detail": "Invalid ticket"}, status=404)
@@ -288,17 +367,16 @@ def verify_event_ticket(request, code):
     ticket.used_at = timezone.now()
     ticket.save(update_fields=["used", "used_at"])
 
-    return Response({
-        "valid": True,
-        "event": ticket.order_item.product.title,
-        "ticket": str(ticket.code),
-        "used_at": ticket.used_at,
-    }, status=200)
+    return Response(
+        {
+            "valid": True,
+            "event": ticket.order_item.product.title,
+            "ticket": str(ticket.code),
+            "used_at": ticket.used_at,
+        }
+    )
 
 
-# --------------------------------------------------------------------
-# SCAN TICKET — ADMIN ONLY
-# --------------------------------------------------------------------
 @api_view(["GET"])
 @permission_classes([IsAdminUser])
 def scan_ticket(request, code):
@@ -307,7 +385,9 @@ def scan_ticket(request, code):
             "order_item__product"
         ).get(code=code)
     except EventTicket.DoesNotExist:
-        return Response({"valid": False, "error": "Invalid ticket"}, status=404)
+        return Response(
+            {"valid": False, "error": "Invalid ticket"}, status=404
+        )
 
     response = {
         "valid": not ticket.used,
@@ -322,4 +402,4 @@ def scan_ticket(request, code):
         ticket.used_at = timezone.now()
         ticket.save(update_fields=["used", "used_at"])
 
-    return Response(response, status=200)
+    return Response(response)

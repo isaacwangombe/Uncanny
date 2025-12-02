@@ -13,6 +13,7 @@ import { apiCartCheckout, fetchCurrentUser } from "../../api";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../contexts/CartContext";
 import { optimizeImage } from "../../utils/cloudinary";
+import "./CheckoutPage.css";
 
 const CheckoutPage = () => {
   const {
@@ -89,10 +90,7 @@ const CheckoutPage = () => {
       };
 
       const res = await apiCartCheckout(payload);
-
-      setMessage(`✅ Order placed! ID: ${res.order_id}`);
-
-      setTimeout(() => navigate("/"), 1800);
+      window.location.href = res.payment_url;
     } catch (err) {
       console.error(err);
       setMessage("❌ Checkout failed.");
@@ -188,7 +186,7 @@ const CheckoutPage = () => {
 
         {/* RIGHT COLUMN: FORM */}
         <Col lg={6}>
-          <Card className="p-3">
+          <Card className="p-3 checkout-form">
             <Form onSubmit={handleSubmit}>
               <Row>
                 <Col md={6}>

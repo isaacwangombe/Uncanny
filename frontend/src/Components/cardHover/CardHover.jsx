@@ -29,25 +29,28 @@ const CardHover = ({ product }) => {
   const hasDiscount = product?.discounted_price != null;
 
   const [adding, setAdding] = useState(false);
-  const [addedMsg, setAddedMsg] = useState("");
+  const [showBubble, setShowBubble] = useState(false);
 
   const handleAddToCart = useCallback(async () => {
     try {
       setAdding(true);
-      await addItem({ product_id: product.id, quantity: 1 });
-      setAddedMsg("Added to cart");
-      setTimeout(() => setAddedMsg(""), 1200);
+      await addItem({ product, quantity: 1 });
+
+      // show floating notification
+      setShowBubble(true);
+      setTimeout(() => setShowBubble(false), 1200);
     } catch (err) {
       console.error("Add to cart failed", err);
-      setAddedMsg("Failed to add");
-      setTimeout(() => setAddedMsg(""), 1500);
+
+      setShowBubble(true);
+      setTimeout(() => setShowBubble(false), 1500);
     } finally {
       setAdding(false);
     }
-  }, [addItem, product.id]);
+  }, [addItem, product]);
 
   return (
-    <div className="card hover-card">
+    <div className="card hover-card" style={{ position: "relative" }}>
       <div className="image">
         <img
           src={imageUrl}
@@ -56,21 +59,24 @@ const CardHover = ({ product }) => {
           decoding="async"
         />
       </div>
+      <div className="">tesing 1234</div>
 
       <div className="details">
         <div className="center">
           <h1>{product.title}</h1>
 
-          <p>
+          <div>
             {product.event_data && (
-              <p className="text-warning fw-bold">
+              <div className="text-warning fw-bold">
                 {new Date(product.event_data.start).toLocaleDateString("en-KE")}{" "}
                 · {product.event_data.location}
-              </p>
+              </div>
             )}
-            {product.description?.slice(0, 120)}
-            {product.description?.length > 120 ? "…" : ""}
-          </p>
+            <p>
+              {product.description?.slice(0, 120)}
+              {product.description?.length > 120 ? "…" : ""}
+            </p>
+          </div>
 
           <p>
             {hasDiscount ? (
@@ -105,17 +111,6 @@ const CardHover = ({ product }) => {
             >
               {adding ? "Adding…" : "Add to Cart"}
             </Button>
-
-            {addedMsg && (
-              <div
-                style={{
-                  marginLeft: 8,
-                  color: addedMsg.startsWith("Added") ? "green" : "crimson",
-                }}
-              >
-                {addedMsg}
-              </div>
-            )}
           </div>
         </div>
       </div>
