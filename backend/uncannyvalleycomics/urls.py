@@ -9,7 +9,7 @@ from products.views import (
     bulk_upload_products,
     # whoami,
 )
-from orders.views import OrderViewSet, CartViewSet, verify_event_ticket, scan_ticket
+from orders.views import OrderViewSet, CartViewSet, verify_event_ticket, scan_ticket, pesapal_ipn
 from analytics.views import AnalyticsViewSet
 from accounts.views import CustomUserDetailsView, CustomUserAdminViewSet
 from users.views import google_login_redirect, full_logout
