@@ -253,6 +253,12 @@ class CartViewSet(viewsets.ViewSet):
             cart.phone_number = phone
 
         cart.save(update_fields=["shipping_address", "phone_number", "user"])
+    # 🔥 ADD THESE DEBUG PRINTS HERE
+        import os
+        print("DEBUG: PESAPAL KEY =", os.getenv("PESAPAL_CONSUMER_KEY"))
+        print("DEBUG: PESAPAL SECRET =", os.getenv("PESAPAL_CONSUMER_SECRET"))
+        print("DEBUG: PESAPAL API INSTANCE KEY =", pesapal_api.key if hasattr(pesapal_api, 'key') else None)
+        print("DEBUG: PESAPAL BASE URL =", getattr(pesapal_api, 'base', None))
 
         # Create Pesapal payment
         try:
