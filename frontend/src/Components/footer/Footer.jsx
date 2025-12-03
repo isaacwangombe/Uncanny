@@ -4,7 +4,13 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import logo from "../../assets/UVC.png";
-import { FaInstagram, FaWhatsapp, FaTiktok, FaFacebookF } from "react-icons/fa";
+import {
+  FaInstagram,
+  FaWhatsapp,
+  FaTiktok,
+  FaFacebookF,
+  FaTwitter,
+} from "react-icons/fa";
 import { subscribeToMailingList } from "../../api"; // correct import
 
 const Footer = () => {
@@ -15,10 +21,17 @@ const Footer = () => {
   const menuItems = ["HOME", "ABOUT", "CONTACT", "TERMS OF USE"];
 
   const socialLinks = [
-    { icon: <FaInstagram />, url: "https://www.instagram.com" },
-    { icon: <FaWhatsapp />, url: "https://wa.me/254700000000" },
-    { icon: <FaTiktok />, url: "https://www.tiktok.com/@yourusername" },
-    { icon: <FaFacebookF />, url: "https://www.facebook.com/yourpage" },
+    { icon: <FaInstagram />, url: "https://www.instagram.com/uvc_nairobi/" },
+    // { icon: <FaWhatsapp />, url: "https://wa.me/254700000000" },
+    { icon: <FaTiktok />, url: "https://www.tiktok.com/@uncannyvalleycomics" },
+    {
+      icon: <FaFacebookF />,
+      url: "https://www.facebook.com/uncannyvalleycomics",
+    },
+    {
+      icon: <FaTwitter />,
+      url: "https://x.com/ComicsUncanny",
+    },
   ];
 
   const handleSubscribe = async () => {

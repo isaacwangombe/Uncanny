@@ -10,6 +10,10 @@ import {
 } from "react-bootstrap";
 import "./AboutPage.css";
 import { apiSendMessage } from "../../api";
+import about1 from "../../assets/UVC.webp";
+import about2 from "../../assets/about2.jpg";
+import about3 from "../../assets/about3.jpg";
+import about4 from "../../assets/about4.jpg";
 
 const AboutPage = () => {
   const [form, setForm] = useState({
@@ -47,7 +51,7 @@ const AboutPage = () => {
       <section
         className="about-hero d-flex align-items-center justify-content-center text-center text-white"
         style={{
-          backgroundImage: `url(https://images.unsplash.com/photo-1603791452906-9e4c88e7d4a5?auto=format&fit=crop&w=1600&q=80)`,
+          backgroundImage: `url(${about4})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           height: "60vh",
@@ -70,7 +74,7 @@ const AboutPage = () => {
         <Row className="align-items-center">
           <Col md={6}>
             <img
-              src="https://images.unsplash.com/photo-1525186402429-b4ff38bedbec?auto=format&fit=crop&w=900&q=80"
+              src={about1}
               alt="African comics"
               className="img-fluid rounded-4 shadow-sm"
             />
@@ -95,7 +99,7 @@ const AboutPage = () => {
           <Row className="align-items-center flex-md-row-reverse">
             <Col md={6}>
               <img
-                src="https://images.unsplash.com/photo-1573497019368-8be88a5f8a41?auto=format&fit=crop&w=900&q=80"
+                src={about3}
                 alt="Sell comics"
                 className="img-fluid rounded-4 shadow-sm"
               />
@@ -125,6 +129,13 @@ const AboutPage = () => {
       <Container className="py-5">
         <Row className="align-items-center">
           <Col md={6}>
+            <img
+              src={about2}
+              alt="Publishing help"
+              className="img-fluid rounded-4 shadow-sm"
+            />
+          </Col>
+          <Col md={6}>
             <h2 className="fw-bold mb-3">Publish With Us</h2>
             <p className="text-muted">
               Are you an aspiring comic author or illustrator? We offer guidance
@@ -135,13 +146,6 @@ const AboutPage = () => {
               <a href="mailto:uvcomicbooks@gmail.com">uvcomicbooks@gmail.com</a>
               .
             </p>
-          </Col>
-          <Col md={6}>
-            <img
-              src="https://images.unsplash.com/photo-1581090700227-1e37b190418e?auto=format&fit=crop&w=900&q=80"
-              alt="Publishing help"
-              className="img-fluid rounded-4 shadow-sm"
-            />
           </Col>
         </Row>
       </Container>

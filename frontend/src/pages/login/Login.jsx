@@ -21,7 +21,7 @@ const Login = () => {
       const data = await loginUser(email, password);
 
       // redirect after login
-      window.location.href = "/admin/dashboard";
+      window.location.href = "/";
     } catch (err) {
       console.error("❌ Login error:", err);
       setError(err.message || "Login failed. Please try again.");

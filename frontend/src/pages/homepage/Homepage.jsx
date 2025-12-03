@@ -109,12 +109,7 @@ const Homepage = () => {
           >
             Events
           </button>
-          <button
-            className={communityTab === "publishing" ? "active" : ""}
-            onClick={() => setCommunityTab("publishing")}
-          >
-            Publishing
-          </button>
+          <button onClick={() => navigate(`/about`)}>About Us</button>
         </div>
 
         <div className="tab-content-wrapper">
