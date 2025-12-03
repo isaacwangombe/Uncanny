@@ -72,10 +72,7 @@ const CardHover = ({ product }) => {
                 · {product.event_data.location}
               </div>
             )}
-            <p>
-              {product.description?.slice(0, 120)}
-              {product.description?.length > 120 ? "…" : ""}
-            </p>
+            <p className="clamp-4">{product.description}</p>
           </div>
 
           <p>
