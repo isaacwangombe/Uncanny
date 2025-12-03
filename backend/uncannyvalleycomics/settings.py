@@ -391,4 +391,5 @@ if not DEBUG:
 PESAPAL_CONSUMER_KEY = os.getenv("PESAPAL_CONSUMER_KEY")
 PESAPAL_CONSUMER_SECRET = os.getenv("PESAPAL_CONSUMER_SECRET")
 PESAPAL_CALLBACK_URL = f"{SITE_URL}/api/payments/pesapal/ipn/"
-PESAPAL_API_URL = "https://pay.pesapal.com/v3"
+PESAPAL_API_URL = os.getenv("PESAPAL_API_URL")
+

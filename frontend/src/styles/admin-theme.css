@@ -67,7 +67,7 @@ body {
   background: #ffffff !important;
   border: none !important;
   border-radius: 18px !important; /* Apple-soft */
-  padding: 0.35rem 0.35rem;
+  /* padding: 0.35rem 0.35rem; */
   box-shadow: 0 2px 14px rgba(0, 0, 0, 0.06) !important;
 }
 

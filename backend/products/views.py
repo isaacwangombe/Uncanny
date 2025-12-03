@@ -123,6 +123,50 @@ class ProductViewSet(viewsets.ModelViewSet):
         low = Product.objects.filter(stock__lt=5).values("id", "title", "stock", "sales_count")
         return Response(list(low))
 
+    @action(detail=False, methods=["post"], url_path="bulk-delete", permission_classes=[permissions.IsAdminUser])
+    def bulk_delete(self, request):
+        ids = request.data.get("ids", [])
+
+        if not isinstance(ids, list):
+            return Response({"error": "Expected { ids: [1,2,3] }"}, status=400)
+
+        products = Product.objects.filter(id__in=ids)
+        deleted_ids = list(products.values_list("id", flat=True))
+        count = products.count()
+        products.delete()
+
+        return Response(
+            {
+                "message": f"Deleted {count} products.",
+                "deleted_ids": deleted_ids,
+                "requested_ids": ids,
+                "missing_ids": [i for i in ids if i not in deleted_ids],
+            },
+            status=200,
+        )
+    
+    @action(
+        detail=False,
+        methods=["delete"],
+        url_path="delete-all",
+        permission_classes=[permissions.IsAdminUser]
+    )
+    def delete_all(self, request):
+        # Only allow superuser, not normal staff
+        if not request.user.is_superuser:
+            return Response(
+                {"error": "Only superadmins can delete all products."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        count = Product.objects.count()
+        Product.objects.all().delete()  # delete EVERYTHING
+
+        return Response(
+            {"message": f"Deleted ALL {count} products."},
+            status=200,
+        )
+            
 
 @api_view(["POST"])
 @permission_classes([IsAdminUser])
@@ -334,45 +378,37 @@ def bulk_upload_products(request):
 @permission_classes([IsAdminUser])
 def download_sample_excel(request):
     """
-    📄 Download a sample Excel matching the current bulk upload format.
-    Includes:
-        - title
-        - description
-        - price
-        - cost
-        - discounted_price
-        - stock
-        - is_event
-        - event_start
-        - event_end
-        - event_location
-        - images
-        - sku
+    Download a sample Excel matching the actual bulk upload format.
+    Supports normal & event products.
     """
+
     data = {
-        "title": ["Sample Event Product"],
-        "description": ["This is an example of an event product."],
-        "price": [20.00],
-        "cost": [10.00],
-        "discounted_price": [15.00],
-        "stock": [50],  # also acts as event capacity
-        "is_event": [True],
-        "event_start": ["2025-06-05 18:00"],
-        "event_end": ["2025-06-05 21:00"],
-        "event_location": ["Sample Venue"],
-        "images": ["example.jpg"], 
-        "sku": ["EVT-001"],
+        "title": ["Sample Normal Product", "Sample Event Product"],
+        "description": ["Normal product example", "Event example"],
+        "price": [20.00, 30.00],
+        "cost": [10.00, 15.00],
+        "discounted_price": [None, 25.00],
+        "stock": [100, 50],
+
+        # REQUIRED for non-event rows (row 0)
+        "category_slug": ["books", ""],   # put an actual slug existing in DB
+
+        # Event fields (ignored for row 0, used for row 1)
+        "event_start": ["", "2025-06-05 18:00"],
+        "event_end": ["", "2025-06-05 21:00"],
+        "event_location": ["", "Sample Venue"],
+
+        "images": ["product.jpg", "event.jpg"],
+        "sku": ["PROD-001", "EVT-001"],
     }
 
     df = pd.DataFrame(data)
 
     output = io.BytesIO()
-
     with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
         df.to_excel(writer, index=False, sheet_name="Products")
         worksheet = writer.sheets["Products"]
 
-        # autosize columns
         for i, col in enumerate(df.columns):
             col_width = max(df[col].astype(str).map(len).max(), len(col)) + 2
             worksheet.set_column(i, i, col_width)
@@ -383,6 +419,39 @@ def download_sample_excel(request):
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     )
     response["Content-Disposition"] = 'attachment; filename="sample_products.xlsx"'
+    return response
+
+@api_view(["GET"])
+@permission_classes([IsAdminUser])
+def download_all_products_csv(request):
+    qs = Product.objects.all().select_related("category")
+
+    # Convert to DataFrame
+    rows = []
+    for p in qs:
+        rows.append({
+            "id": p.id,
+            "title": p.title,
+            "description": p.description,
+            "price": p.price,
+            "cost": p.cost,
+            "discounted_price": p.discounted_price,
+            "stock": p.stock,
+            "category": p.category.name if p.category else "",
+            "category_slug": p.category.slug if p.category else "",
+            "is_active": p.is_active,
+            "trending": p.trending,
+            "sku": p.sku,
+            "created_at": p.created_at,
+            "updated_at": p.updated_at,
+        })
+
+    df = pd.DataFrame(rows)
+
+    # Convert to CSV
+    csv_data = df.to_csv(index=False)
+    response = HttpResponse(csv_data, content_type="text/csv")
+    response["Content-Disposition"] = 'attachment; filename="all_products.csv"'
     return response
 
 

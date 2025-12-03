@@ -5,6 +5,9 @@ import "../../../styles/admin-theme.css";
 const ProductTable = ({
   products,
   categories,
+  selectedIds,
+  toggleSelect,
+  toggleSelectAll,
   onEdit,
   onView,
   onToggleTrending,
@@ -17,6 +20,16 @@ const ProductTable = ({
       <Table bordered hover>
         <thead>
           <tr>
+            <th>
+              {/* Select All */}
+              <Form.Check
+                type="checkbox"
+                checked={
+                  products.length > 0 && selectedIds.length === products.length
+                }
+                onChange={toggleSelectAll}
+              />
+            </th>
             <th>ID</th>
             <th>Title</th>
             <th>Main</th>
@@ -39,37 +52,46 @@ const ProductTable = ({
 
               return (
                 <tr key={p.id}>
-                  <td data-label="ID">{p.id}</td>
-                  <td data-label="Title">{p.title}</td>
-                  <td data-label="Main Category">{main?.name || "—"}</td>
-                  <td data-label="Subcategory">{sub?.name || "—"}</td>
-                  <td data-label="Cost">
-                    {p.cost ? Number(p.cost).toFixed(2) : "—"}
+                  <td>
+                    <Form.Check
+                      type="checkbox"
+                      checked={selectedIds.includes(p.id)}
+                      onChange={() => toggleSelect(p.id)}
+                    />
                   </td>
-                  <td data-label="Price">
-                    {p.price ? Number(p.price).toFixed(2) : "—"}
-                  </td>
-                  <td data-label="Discount">
+
+                  <td>{p.id}</td>
+                  <td>{p.title}</td>
+                  <td>{main?.name || "—"}</td>
+                  <td>{sub?.name || "—"}</td>
+
+                  <td>{p.cost ? Number(p.cost).toFixed(2) : "—"}</td>
+                  <td>{p.price ? Number(p.price).toFixed(2) : "—"}</td>
+                  <td>
                     {p.discounted_price
                       ? Number(p.discounted_price).toFixed(2)
                       : "—"}
                   </td>
-                  <td data-label="Stock">{p.stock}</td>
-                  <td data-label="Status">
+
+                  <td>{p.stock}</td>
+
+                  <td>
                     {p.is_active ? (
                       <Badge bg="success">Active</Badge>
                     ) : (
                       <Badge bg="secondary">Inactive</Badge>
                     )}
                   </td>
-                  <td data-label="Trending">
+
+                  <td>
                     <Form.Check
                       type="switch"
                       checked={!!p.trending}
                       onChange={() => onToggleTrending(p.id)}
                     />
                   </td>
-                  <td data-label="Actions">
+
+                  <td>
                     <Button
                       size="sm"
                       variant="outline-primary"
@@ -78,6 +100,7 @@ const ProductTable = ({
                     >
                       View
                     </Button>
+
                     <Button
                       size="sm"
                       variant="outline-secondary"
@@ -86,6 +109,7 @@ const ProductTable = ({
                     >
                       Edit
                     </Button>
+
                     <Button
                       size="sm"
                       variant="outline-danger"
@@ -99,7 +123,7 @@ const ProductTable = ({
             })
           ) : (
             <tr>
-              <td colSpan={11} className="text-center text-muted">
+              <td colSpan={13} className="text-center text-muted">
                 No products found
               </td>
             </tr>

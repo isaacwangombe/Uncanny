@@ -255,14 +255,7 @@ class CartViewSet(viewsets.ViewSet):
         cart.save(update_fields=["shipping_address", "phone_number", "user"])
 
         # DEBUG: print environment values (only temporary)
-        import os
-        try:
-            print("DEBUG: PESAPAL ENV KEY =", os.getenv("PESAPAL_CONSUMER_KEY"))
-            print("DEBUG: PESAPAL ENV SECRET =", os.getenv("PESAPAL_CONSUMER_SECRET"))
-            # do not access pesapal_api at import-time; create instance below
-        except Exception:
-            pass
-
+       
         # Create Pesapal payment — instantiate the API client here
         try:
             pesapal = get_pesapal_api()

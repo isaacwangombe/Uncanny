@@ -7,6 +7,7 @@ from products.views import (
     ProductImageViewSet,
     download_sample_excel,
     bulk_upload_products,
+    download_all_products_csv,
     # whoami,
 )
 from orders.views import OrderViewSet, CartViewSet, verify_event_ticket, scan_ticket, pesapal_ipn
@@ -71,6 +72,7 @@ urlpatterns = [
     # path("api/whoami/", whoami),
     path("api/products/download-sample-excel/", download_sample_excel, name="download-sample-excel"),
     path("api/products/bulk-upload/", bulk_upload_products, name="bulk-upload-products"),
+    path("api/products/download-csv/", download_all_products_csv),
 
     # 🌐 Google OAuth login + redirect
     path("accounts/", include("allauth.urls")),
