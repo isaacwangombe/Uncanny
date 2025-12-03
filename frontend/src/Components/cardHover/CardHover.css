@@ -56,7 +56,7 @@
 
 .card .details .center h1 {
   margin: 0 0 8px 0;
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   color: #111;
   text-transform: capitalize;
@@ -71,7 +71,7 @@
 }
 
 .card .details .center p:last-of-type {
-  font-weight: 600;
+  /* font-weight: 600; */
   color: #000;
   margin-top: 12px;
 }
@@ -89,9 +89,22 @@
   font-weight: 500;
   cursor: pointer;
   transition: background 0.3s ease;
-  margin-top: 12px;
+  /* margin-top: 12px; */
 }
 
 .btn-trending:hover {
   background-color: #000;
+}
+
+@media (max-width: 676px) {
+  .center h1 {
+    font-size: 1rem !important;
+  }
+  .center p {
+    font-size: 12px !important;
+  }
+
+  .center Button {
+    font-size: 10px !important;
+  }
 }

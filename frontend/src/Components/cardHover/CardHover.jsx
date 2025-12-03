@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 import { useCart } from "../../contexts/CartContext";
 import { optimizeImage } from "../../utils/cloudinary";
 import "./CardHover.css";
+import { Link } from "react-router-dom";
 
 const formatKES = (v) => {
   if (v === null || v === undefined) return "KES 0.00";
@@ -59,7 +60,6 @@ const CardHover = ({ product }) => {
           decoding="async"
         />
       </div>
-      <div className="">tesing 1234</div>
 
       <div className="details">
         <div className="center">
@@ -104,12 +104,20 @@ const CardHover = ({ product }) => {
           <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
             <Button
               variant="dark"
-              size="lg"
-              className="btn-trending"
+              className="flex-1"
               onClick={handleAddToCart}
               disabled={adding}
             >
               {adding ? "Adding…" : "Add to Cart"}
+            </Button>
+
+            <Button
+              as={Link}
+              to={`/product/${product.id}`}
+              variant="outline-dark"
+              className="flex-1"
+            >
+              Details
             </Button>
           </div>
         </div>

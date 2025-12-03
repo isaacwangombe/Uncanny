@@ -1,8 +1,14 @@
 // src/App.jsx
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 // 🏪 Public pages
 import StorePage from "./pages/storePage/StorePage";
 import CheckoutPage from "./pages/checkoutPage/CheckoutPage";
@@ -10,6 +16,7 @@ import Homepage from "./pages/homepage/Homepage";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import AboutPage from "./pages/about/AboutPage";
+
 // 🧩 Admin pages
 import AdminLayout from "./Components/admin/AdminLayout";
 import DashboardPage from "./pages/admin/DashboardPage";
@@ -31,9 +38,22 @@ import AuthCallback from "./pages/auth/AuthCallback";
 import { CartProvider, useCart } from "./contexts/CartContext";
 import ProductDetailPage from "./pages/productDetail/ProductDetailPage";
 
+// 🔝 Scroll to top on route change
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [pathname]);
+
+  return null;
+}
+
 function App() {
   return (
     <Router>
+      <ScrollToTop />
+
       {/* ✅ CartProvider wraps the entire app */}
       <CartProvider>
         <AppContent />
@@ -64,8 +84,8 @@ function AppContent() {
         <Route path="/staff/*" element={<AdminLayoutWrapper />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
       </Routes>
-      <ToastContainer position="top-right" autoClose={1200} />
 
+      <ToastContainer position="top-right" autoClose={1200} />
       <Footer />
 
       {/* ✅ Global Cart Drawer always available */}

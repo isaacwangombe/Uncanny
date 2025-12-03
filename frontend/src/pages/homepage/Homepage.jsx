@@ -109,7 +109,7 @@ const Homepage = () => {
           >
             Events
           </button>
-          <button onClick={() => navigate(`/about`)}>About Us</button>
+          <button onClick={() => navigate(`/about`)}>About</button>
         </div>
 
         <div className="tab-content-wrapper">
