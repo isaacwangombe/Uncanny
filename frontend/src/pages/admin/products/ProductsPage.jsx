@@ -1,6 +1,14 @@
 // src/admin/products/ProductsPage.jsx
 import React, { useEffect, useState } from "react";
-import { Button, Container, Form, Row, Col, Spinner } from "react-bootstrap";
+import {
+  Button,
+  Container,
+  Form,
+  Row,
+  Col,
+  Spinner,
+  Badge,
+} from "react-bootstrap";
 import { fetchProducts, fetchCategories } from "../../../api";
 import {
   apiAddProduct,
@@ -45,7 +53,7 @@ const ProductsPage = () => {
   const [showBulkUpload, setShowBulkUpload] = useState(false);
 
   const [selectedIds, setSelectedIds] = useState([]);
-  const [loadingAction, setLoadingAction] = useState(false); // ⭐ NEW
+  const [loadingAction, setLoadingAction] = useState(false);
 
   const backendUrl = import.meta.env.VITE_API_URL_SHORT;
   const SHOW_DELETE_ALL = true;
@@ -73,7 +81,37 @@ const ProductsPage = () => {
   };
 
   // ------------------------------------------------------------
-  // ⭐ UPDATED: Bulk Upload with loadingAction
+  // UPDATED: compute totals & counts by parent category
+  // ------------------------------------------------------------
+  const totalProducts = (products || []).length;
+
+  // Build a map: parentCategoryId -> count
+  const countsByParent = (() => {
+    const map = {};
+    // helper to get parent id for a category id
+    const getParentId = (catId) => {
+      if (!catId) return null;
+      const cat = categories.find((c) => c.id === catId);
+      if (!cat) return null;
+      return cat.parent === null || cat.parent === undefined
+        ? cat.id
+        : cat.parent;
+    };
+
+    (products || []).forEach((p) => {
+      const parentId = getParentId(p.category);
+      if (parentId == null) {
+        map.__uncategorized = (map.__uncategorized || 0) + 1;
+      } else {
+        map[parentId] = (map[parentId] || 0) + 1;
+      }
+    });
+
+    return map;
+  })();
+
+  // ------------------------------------------------------------
+  // Bulk Upload with loadingAction
   // ------------------------------------------------------------
   const handleBulkUpload = async () => {
     if (!excelFile) {
@@ -108,7 +146,7 @@ const ProductsPage = () => {
   };
 
   // ------------------------------------------------------------
-  // ⭐ UPDATED: Bulk Delete Selected with loadingAction
+  // Bulk Delete Selected with loadingAction
   // ------------------------------------------------------------
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) return;
@@ -187,7 +225,7 @@ const ProductsPage = () => {
 
   return (
     <Container className="py-4">
-      {/* ⭐ NEW: Global Action Banner */}
+      {/* Global Action Banner */}
       {loadingAction && (
         <div className="alert alert-info text-center fw-bold">
           {loadingAction === "bulk_upload" &&
@@ -200,9 +238,44 @@ const ProductsPage = () => {
 
       {/* Header */}
       <Row className="align-items-center mb-3">
-        {/* Left Side Title */}
+        {/* Left Side Title + Stats */}
         <Col xs={12} md={4}>
-          <h4 className="mb-3">Products</h4>
+          <div className="d-flex align-items-start flex-column">
+            <h4 className="mb-1">Products</h4>
+
+            {/* NEW: Totals + By-Parent stats */}
+            <div className="small text-muted">
+              <span className="me-2">
+                Total: <strong>{totalProducts}</strong>
+              </span>
+
+              {/* counts for each parent category */}
+              {mainCategories.length > 0 && (
+                <span className="d-block mt-1">
+                  {mainCategories.map((parent) => (
+                    <Badge
+                      bg="secondary"
+                      key={parent.id}
+                      className="me-1"
+                      style={{ fontSize: "0.75rem" }}
+                    >
+                      {parent.name}: {countsByParent[parent.id] || 0}
+                    </Badge>
+                  ))}
+
+                  {/* uncategorized */}
+                  <Badge
+                    bg="warning"
+                    text="dark"
+                    className="ms-2"
+                    style={{ fontSize: "0.75rem" }}
+                  >
+                    Uncategorized: {countsByParent.__uncategorized || 0}
+                  </Badge>
+                </span>
+              )}
+            </div>
+          </div>
         </Col>
 
         {/* Center: Primary actions */}
@@ -351,7 +424,6 @@ const ProductsPage = () => {
 
       {/* Filters */}
       <Row className="mb-3 g-2 flex-wrap">
-        {/* preserved as-is */}
         <Col xs={12} md={3}>
           <Form.Control
             placeholder="Search..."

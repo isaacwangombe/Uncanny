@@ -61,7 +61,7 @@ const Sidebar = ({ isOpen, onClose }) => {
           position: isDesktop ? "sticky" : "fixed",
           left: isDesktop ? "0" : isOpen ? "0" : "-260px",
           top: 0,
-          zIndex: 1050,
+          // zIndex: 1050,
           transition: "left 0.3s ease",
           boxShadow: "2px 0 20px rgba(0,0,0,0.3)",
           display: "flex",
