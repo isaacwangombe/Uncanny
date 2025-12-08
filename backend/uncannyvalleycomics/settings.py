@@ -40,7 +40,14 @@ FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://127.0.0.1:5173")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [   
+    "uncannyvalleycomics.com",
+    "www.uncannyvalleycomics.com",
+    "localhost",
+    "127.0.0.1",
+    ]
+
+CORS_ALLOW_ALL_ORIGINS = False
 
 
 # Application definition
@@ -334,12 +341,10 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",  # allauth
 ]
 
-# CORS_ALLOWED_ORIGINS = [
-#     "http://127.0.0.1:5173",
-#     "http://localhost:5173",
-#     "https://uncanny-valley-comics-backend.onrender.com",
-#     "https://uncannyvalleycomics-3lmc.onrender.com"
-# ]
+CORS_ALLOWED_ORIGINS = [
+    "https://uncannyvalleycomics.com",
+    "https://www.uncannyvalleycomics.com",
+]
 
 CORS_ALLOW_HEADERS = [
     "content-type",
@@ -348,28 +353,25 @@ CORS_ALLOW_HEADERS = [
 
 
 CSRF_TRUSTED_ORIGINS = [
-    # "http://127.0.0.1:5173",
-    # "http://localhost:5173",
-    # "https://uncannyvalleycomics-3lmc.onrender.com",
-    # "https://uncanny-valley-comics-backend.onrender.com",
     "http://localhost:8080",
     "http://127.0.0.1:8080",
-     "http://134.209.18.2",
+    "http://134.209.18.2",
+    "https://uncannyvalleycomics.com",
+    "https://www.uncannyvalleycomics.com",
 ]
 
 
 CSRF_COOKIE_SAMESITE = "Lax"
 SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_HTTPONLY = True
-CSRF_COOKIE_SECURE = False
-SESSION_COOKIE_SECURE = False
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_ALL_ORIGINS = True
+SECURE_SSL_REDIRECT = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 
 # ✅ This makes cookies valid across frontend & backend subdomains
-CSRF_COOKIE_DOMAIN = None
-SESSION_COOKIE_DOMAIN = None
+CSRF_COOKIE_DOMAIN = "uncannyvalleycomics.com"
+SESSION_COOKIE_DOMAIN = "uncannyvalleycomics.com"
 
 
 logging.getLogger("allauth").setLevel("DEBUG")
@@ -384,9 +386,8 @@ FILE_UPLOAD_HANDLERS = [
 
 # Base URL for links inside emails / QR codes
 SITE_URL = "http://127.0.0.1:8000"   # Local dev
-
 if not DEBUG:
-    SITE_URL = "https://uncanny-valley-comics-backend.onrender.com"
+    SITE_URL = "https://uncannyvalleycomics.com"
 
 PESAPAL_CONSUMER_KEY = os.getenv("PESAPAL_CONSUMER_KEY")
 PESAPAL_CONSUMER_SECRET = os.getenv("PESAPAL_CONSUMER_SECRET")
