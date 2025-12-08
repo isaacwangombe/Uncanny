@@ -113,20 +113,18 @@ export async function bulkUploadProducts(excelFile, zipFile = null) {
 }
 
 export async function bulkDeleteProducts(ids) {
-  const token = localStorage.getItem("token");
+  const token = getAccessToken(); // ✔ Correct
+
   const res = await fetch(`${API_BASE}/products/bulk-delete/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: token ? `Bearer ${token}` : "",
+      Authorization: `Bearer ${getAccessToken()}`,
     },
     body: JSON.stringify({ ids }),
   });
 
-  if (!res.ok) {
-    throw new Error("Bulk delete failed");
-  }
-
+  if (!res.ok) throw new Error("Bulk delete failed");
   return res.json();
 }
 
@@ -136,7 +134,7 @@ export async function deleteAllProducts() {
   const res = await fetch(`${API_BASE}/products/delete-all/`, {
     method: "DELETE",
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${getAccessToken()}`,
     },
   });
 
@@ -154,7 +152,7 @@ export async function downloadAllProductsCSV() {
   const res = await fetch(`${API_BASE}/products/download-csv/`, {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${getAccessToken()}`,
     },
   });
 
