@@ -159,19 +159,35 @@ export async function logoutUser() {
 
 export async function fetchCurrentUser() {
   const token = getAccessToken();
-  if (!token) return null;
 
-  const res = await fetch(`${API_BASE}/auth/user/`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  // First try with session cookies (Google login)
+  try {
+    const res = await fetch(`${API_BASE}/auth/user/`, {
+      credentials: "include",
+    });
 
-  if (res.status === 401) {
-    const refreshed = await refreshAccessToken();
-    return refreshed ? await fetchCurrentUser() : null;
+    if (res.ok) {
+      return await res.json(); // 🎉 Logged in with session (Google)
+    }
+  } catch (e) {
+    console.error("Session auth failed", e);
   }
 
-  if (!res.ok) return null;
-  return res.json();
+  // If no session user, try JWT user
+  if (token) {
+    const res = await fetch(`${API_BASE}/auth/user/`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (res.status === 401) {
+      const refreshed = await refreshAccessToken();
+      return refreshed ? await fetchCurrentUser() : null;
+    }
+
+    if (res.ok) return res.json();
+  }
+
+  return null;
 }
 
 /* ==========================================================
