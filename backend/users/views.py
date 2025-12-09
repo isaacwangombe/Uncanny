@@ -10,6 +10,7 @@ from django.contrib.auth import logout as django_logout
 from rest_framework.decorators import api_view, permission_classes
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import logout
 
 
 User = get_user_model()
