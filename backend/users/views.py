@@ -8,6 +8,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.conf import settings
 from django.contrib.auth import logout as django_logout
 from rest_framework.decorators import api_view, permission_classes
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 
 User = get_user_model()
@@ -30,14 +32,13 @@ def google_login_redirect(request):
 
     return redirect(frontend_url)
 
-@api_view(["POST"])
-@permission_classes([AllowAny])
+@csrf_exempt
 def full_logout(request):
-    """Fully log out user and clear session cookies"""
-    django_logout(request)
-    response = JsonResponse({"detail": "Successfully logged out."})
-    response.delete_cookie("sessionid")
-    response.delete_cookie("csrftoken")
+    logout(request)  # 🔥 removes the session cookie
+    response = JsonResponse({"detail": "Logged out"})
+    response.delete_cookie("sessionid")       # cleanup
+    response.delete_cookie("csrftoken")       # cleanup
+    response.delete_cookie("guest_id")        # (optional if you use guest carts)
     return response
 
 

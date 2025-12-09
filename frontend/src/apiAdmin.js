@@ -41,14 +41,12 @@ export async function loginUser(email, password) {
 }
 
 export async function logoutUser() {
-  await fetch(`${API_BASE}/auth/logout/`, {
+  await fetch(`${API_BASE}/auth/full-logout/`, {
     method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
+    credentials: "include", // IMPORTANT
   });
 
   clearTokens();
-  window.location.href = "/"; // 🔽 Redirect after logout
 }
 /* ==========================================================
 📊 DASHBOARD ENDPOINTS — FIXED & RANGE-AWARE
