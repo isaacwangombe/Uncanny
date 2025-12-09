@@ -40,10 +40,16 @@ export async function loginUser(email, password) {
   return data;
 }
 
-export function logoutUser() {
-  clearTokens();
-}
+export async function logoutUser() {
+  await fetch(`${API_BASE}/auth/logout/`, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+  });
 
+  clearTokens();
+  window.location.href = "/"; // 🔽 Redirect after logout
+}
 /* ==========================================================
 📊 DASHBOARD ENDPOINTS — FIXED & RANGE-AWARE
 ========================================================== */
