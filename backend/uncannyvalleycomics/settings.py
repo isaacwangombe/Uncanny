@@ -395,3 +395,5 @@ PESAPAL_CONSUMER_SECRET = os.getenv("PESAPAL_CONSUMER_SECRET")
 PESAPAL_CALLBACK_URL = f"{SITE_URL}/api/payments/pesapal/ipn/"
 PESAPAL_API_URL = os.getenv("PESAPAL_API_URL")
 
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+SOCIALACCOUNT_ADAPTER = "users.adapters.SafeSocialAccountAdapter"
