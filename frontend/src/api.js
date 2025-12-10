@@ -81,18 +81,21 @@ export async function apiFetch(
   options = {},
   { cacheKey = null } = {}
 ) {
-  // Serve cache when available
   if (cacheKey) {
     const cached = getCache(cacheKey);
     if (cached) return cached;
   }
 
   let token = getAccessToken();
+  const csrfToken = getCSRFToken();
 
   const headers = {
     ...(options.headers || {}),
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    "Content-Type": "application/json",
+    ...(options.body instanceof FormData
+      ? {}
+      : { "Content-Type": "application/json" }),
+    ...(csrfToken ? { "X-CSRFToken": csrfToken } : {}),
   };
 
   let res = await fetch(`${API_BASE}${endpoint}`, {
@@ -101,7 +104,6 @@ export async function apiFetch(
     credentials: "include",
   });
 
-  // Auto-refresh on 401
   if (res.status === 401 && getRefreshToken()) {
     const newToken = await refreshAccessToken();
     if (newToken) {
