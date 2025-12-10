@@ -47,8 +47,6 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     ]
 
-CORS_ALLOW_ALL_ORIGINS = False
-
 
 # Application definition
 
@@ -341,6 +339,8 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",  # allauth
 ]
 
+CORS_ALLOW_CREDENTIALS = True
+
 CORS_ALLOWED_ORIGINS = [
     "https://uncannyvalleycomics.com",
     "https://www.uncannyvalleycomics.com",
@@ -349,6 +349,7 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOW_HEADERS = [
     "content-type",
     "authorization",
+    "x-csrftoken",
 ]
 
 
@@ -371,8 +372,8 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 
 # ✅ This makes cookies valid across frontend & backend subdomains
-CSRF_COOKIE_DOMAIN = "uncannyvalleycomics.com"
-SESSION_COOKIE_DOMAIN = "uncannyvalleycomics.com"
+CSRF_COOKIE_DOMAIN = ".uncannyvalleycomics.com"
+SESSION_COOKIE_DOMAIN = ".uncannyvalleycomics.com"
 
 
 logging.getLogger("allauth").setLevel("DEBUG")
