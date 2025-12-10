@@ -7,6 +7,13 @@ export const BACKEND_BASE = window.API_BASE_URL_SHORT;
 
 export const API_BASE = `${BACKEND_BASE}/api`;
 
+export function getCSRFToken() {
+  return document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("csrftoken="))
+    ?.split("=")[1];
+}
+
 /* ==========================================================
    🔐 TOKEN & AUTH HELPERS
 ========================================================== */
@@ -89,13 +96,15 @@ export async function apiFetch(
   let token = getAccessToken();
   const csrfToken = getCSRFToken();
 
+  const isWrite = ["POST", "PUT", "PATCH", "DELETE"].includes(
+    (options.method || "GET").toUpperCase()
+  );
+
   const headers = {
     ...(options.headers || {}),
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    ...(options.body instanceof FormData
-      ? {}
-      : { "Content-Type": "application/json" }),
-    ...(csrfToken ? { "X-CSRFToken": csrfToken } : {}),
+    ...(isWrite ? { "X-CSRFToken": getCSRFToken() } : {}),
+    "Content-Type": "application/json",
   };
 
   let res = await fetch(`${API_BASE}${endpoint}`, {
@@ -154,8 +163,7 @@ export async function logoutUser() {
     });
   } catch (err) {}
 
-  localStorage.clear();
-  window.dispatchEvent(new Event("storage"));
+  clearTokens();
   window.location.replace("/login");
 }
 
