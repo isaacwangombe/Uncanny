@@ -1,12 +1,14 @@
 import requests
 from django.conf import settings
 
+
 def get_token():
     url = f"{settings.PESAPAL_API_URL}/api/Auth/RequestToken"
     payload = {
         "consumer_key": settings.PESAPAL_CONSUMER_KEY,
         "consumer_secret": settings.PESAPAL_CONSUMER_SECRET,
     }
+
     res = requests.post(url, json=payload, timeout=10)
     print("TOKEN RESPONSE:", res.text)
 
@@ -17,9 +19,10 @@ def get_token():
 
 
 def register_ipn():
-    token = get_token()  # <-- GET ACCESS TOKEN FIRST
+    token = get_token()
 
-    url = f"{settings.PESAPAL_API_URL}/api/Transactions/RegisterIPN"
+    # FIX: correct Pesapal endpoint
+    url = f"{settings.PESAPAL_API_URL}/api/Transactions/RegisterIPNUrl"
 
     payload = {
         "url": settings.PESAPAL_CALLBACK_URL,
