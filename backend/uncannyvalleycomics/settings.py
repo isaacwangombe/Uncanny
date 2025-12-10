@@ -374,6 +374,7 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # ✅ This makes cookies valid across frontend & backend subdomains
 CSRF_COOKIE_DOMAIN = ".uncannyvalleycomics.com"
 SESSION_COOKIE_DOMAIN = ".uncannyvalleycomics.com"
+CORS_EXPOSE_HEADERS = ["X-CSRFToken", "Authorization"]
 
 
 logging.getLogger("allauth").setLevel("DEBUG")
@@ -395,6 +396,7 @@ PESAPAL_CONSUMER_KEY = os.getenv("PESAPAL_CONSUMER_KEY")
 PESAPAL_CONSUMER_SECRET = os.getenv("PESAPAL_CONSUMER_SECRET")
 PESAPAL_CALLBACK_URL = f"{SITE_URL}/api/payments/pesapal/ipn/"
 PESAPAL_API_URL = os.getenv("PESAPAL_API_URL")
+PESAPAL_IPN_ID = os.getenv("PESAPAL_IPN_ID")
 
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 SOCIALACCOUNT_ADAPTER = "users.adapters.SafeSocialAccountAdapter"
