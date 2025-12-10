@@ -22,7 +22,7 @@ def register_ipn():
     token = get_token()
 
     # FIX: correct Pesapal endpoint
-    url = f"{settings.PESAPAL_API_URL}/api/Transactions/RegisterIPNUrl"
+    url = f"{settings.PESAPAL_API_URL}/api/URLSetup/RegisterIPN"
 
     payload = {
         "url": settings.PESAPAL_CALLBACK_URL,
