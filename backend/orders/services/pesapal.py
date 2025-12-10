@@ -56,7 +56,7 @@ class PesapalAPI:
             "amount": float(order.total),
             "description": f"Order #{order.id}",
             "callback_url": settings.PESAPAL_CALLBACK_URL,
-            "notification_id": str(order.id),
+            "notification_id": settings.PESAPAL_IPN_ID,
             "billing_address": {
                 "email_address": email,
                 "phone_number": phone,
