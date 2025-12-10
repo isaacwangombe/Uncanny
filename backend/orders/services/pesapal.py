@@ -57,6 +57,7 @@ class PesapalAPI:
             "description": f"Order #{order.id}",
             "callback_url": settings.PESAPAL_CALLBACK_URL,
             "notification_id": settings.PESAPAL_IPN_ID,
+            "notification_type": "POST",
             "billing_address": {
                 "email_address": email,
                 "phone_number": phone,

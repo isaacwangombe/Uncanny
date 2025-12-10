@@ -33,6 +33,9 @@ import Navbars from "./Components/navbar/Navbar";
 import Footer from "./Components/footer/Footer";
 import CartDrawer from "./Components/cartDrawer/CartDrawer";
 import AuthCallback from "./pages/auth/AuthCallback";
+import PaymentProcessing from "./pages/PaymentProcessing";
+import PaymentFailed from "./pages/PaymentFailed";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 // 🛒 Cart context
 import { CartProvider, useCart } from "./contexts/CartContext";
@@ -79,6 +82,9 @@ function AppContent() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/payment-processing" element={<PaymentProcessing />} />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/payment-failed" element={<PaymentFailed />} />
 
         {/* Admin routes */}
         <Route path="/staff/*" element={<AdminLayoutWrapper />} />

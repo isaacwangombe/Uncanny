@@ -293,8 +293,8 @@ class CartViewSet(viewsets.ViewSet):
 @permission_classes([AllowAny])
 def pesapal_ipn(request):
     data = request.data
-    order_id = data.get("OrderTrackingId") or data.get("order_id")
-    status_str = data.get("status", "").lower()
+    order_id = data.get("OrderTrackingId") or data.get("orderTrackingId")
+    status_str = (data.get("OrderNotificationType") or "").lower()
 
     if not order_id:
         return Response({"detail": "Missing order ID"}, status=400)
@@ -304,12 +304,13 @@ def pesapal_ipn(request):
         return Response({"detail": "Order not found"}, status=404)
 
     if status_str != "completed":
+        order.status = Order.Status.FAILED
+        order.save(update_fields=["status"])
         return Response({"detail": "Payment pending or failed"}, status=200)
 
-    # Payment confirmed: mark PAID + create tickets
+    # Mark paid & generate tickets
     order.process_payment()
 
-    # Send tickets
     email = (
         order.shipping_address.get("email")
         or (order.user.email if order.user else None)
@@ -318,6 +319,7 @@ def pesapal_ipn(request):
         _send_order_tickets(order, email)
 
     return Response({"detail": "Payment confirmed & tickets emailed."})
+
 
 
 # =========================================================
@@ -416,3 +418,13 @@ def scan_ticket(request, code):
         ticket.save(update_fields=["used", "used_at"])
 
     return Response(response)
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def payment_status(request, order_id):
+    try:
+        order = Order.objects.get(id=order_id)
+        return Response({"status": order.status})
+    except Order.DoesNotExist:
+        return Response({"error": "Not found"}, status=404)

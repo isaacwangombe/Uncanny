@@ -298,6 +298,30 @@ export function completeGoogleLogin(access, refresh) {
   window.location.href = "/";
 }
 
+async function waitForPayment(orderId) {
+  let tries = 0;
+
+  while (tries < 20) {
+    const res = await fetch(`${API_BASE}/orders/status/${orderId}/`);
+    const data = await res.json();
+
+    if (data.status === "PAID") {
+      window.location.href = "/order-success";
+      return;
+    }
+
+    if (data.status === "FAILED") {
+      window.location.href = "/payment-failed";
+      return;
+    }
+
+    tries++;
+    await new Promise((r) => setTimeout(r, 3000)); // retry after 3s
+  }
+
+  window.location.href = "/payment-pending";
+}
+
 /* ==========================================================
    ✉️ CONTACT FORM
 ========================================================== */

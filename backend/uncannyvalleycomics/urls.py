@@ -10,7 +10,7 @@ from products.views import (
     download_all_products_csv,
     # whoami,
 )
-from orders.views import OrderViewSet, CartViewSet, verify_event_ticket, scan_ticket, pesapal_ipn
+from orders.views import OrderViewSet, CartViewSet, verify_event_ticket, scan_ticket, pesapal_ipn, payment_status
 from analytics.views import AnalyticsViewSet
 from accounts.views import CustomUserDetailsView, CustomUserAdminViewSet
 from users.views import google_login_redirect, full_logout
@@ -48,6 +48,7 @@ urlpatterns = [
     path("api/contact/", include(("contact.urls", "contact"))),
     path("api/events/verify/<uuid:code>/", verify_event_ticket, name="verify-ticket"),
     path("api/events/scan/<uuid:code>/", scan_ticket),
+    path("orders/status/<int:order_id>/", payment_status),
 
     # 🔐 JWT Authentication
     path("api/auth/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),

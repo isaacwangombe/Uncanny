@@ -90,7 +90,7 @@ const CheckoutPage = () => {
       };
 
       const res = await apiCartCheckout(payload);
-      window.location.href = res.payment_url;
+      window.location.href = `/payment-processing?order_id=${res.order_id}`;
     } catch (err) {
       console.error(err);
       setMessage("❌ Checkout failed.");
