@@ -1,5 +1,6 @@
 import requests
 from django.conf import settings
+import uuid
 
 class PesapalAPI:
     def __init__(self):
@@ -49,9 +50,10 @@ class PesapalAPI:
     def create_order(self, order, email, phone):
         token = self.get_token()
         url = f"{self.base}/api/Transactions/SubmitOrderRequest"
+        unique_request_id = str(uuid.uuid4())
 
         payload = {
-            "id": str(order.id),
+            "id": unique_request_id,
             "currency": "KES",
             "amount": float(order.total),
             "description": f"Order #{order.id}",

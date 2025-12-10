@@ -21,7 +21,9 @@ services:
     depends_on:
       - db
     volumes:
-      - static_volume:/app/staticfiles
+      - ./backend/staticfiles:/var/www/static
+      - ./backend/media:/var/www/media
+
   nginx:
     build: ./frontend
     container_name: uvc_nginx
@@ -29,7 +31,9 @@ services:
       - backend
     ports:
       - "8080:80"
+    volumes:
+      - ./backend/staticfiles:/var/www/static
+      - ./backend/media:/var/www/media
 
 volumes:
   pgdata:
-  static_volume:
