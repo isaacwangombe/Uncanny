@@ -389,7 +389,7 @@ FILE_UPLOAD_HANDLERS = [
 # Base URL for links inside emails / QR codes
 SITE_URL = "http://127.0.0.1:8000"   # Local dev
 if not DEBUG:
-    SITE_URL = "https://uncannyvalleycomics.com"
+    SITE_URL = os.getenv("SITE_URL")
 
 PESAPAL_CONSUMER_KEY = os.getenv("PESAPAL_CONSUMER_KEY")
 PESAPAL_CONSUMER_SECRET = os.getenv("PESAPAL_CONSUMER_SECRET")
