@@ -269,10 +269,14 @@ export function fetchTrendingProducts(parentSlug = null) {
 }
 
 export const fetchProductById = async (id) => {
-  const res = await fetch(
-    `${import.meta.env.VITE_API_URL_SHORT}/api/products/${id}/`
-  );
-  if (!res.ok) throw new Error("Failed to fetch product");
+  const res = await fetch(`${API_BASE}/products/${id}/`, {
+    credentials: "include",
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch product");
+  }
+
   return res.json();
 };
 
