@@ -9,12 +9,6 @@ import {
   apiFetch,
 } from "./api"; //
 
-// 🌍 Backend base URL (auto-switch local vs production)
-// export const BACKEND_BASE =
-//   import.meta.env.MODE === "production"
-//     ? "https://uncanny-valley-comics-backend.onrender.com"
-//     : "http://127.0.0.1:8000";
-
 export const BACKEND_BASE = window.API_BASE_URL_SHORT;
 
 export const api = axios.create({
@@ -72,7 +66,7 @@ export const getOrderStatusSummary = (range = "30") =>
 
 export const getTopProductsByCategory = (catId = "", range = "30") =>
   apiFetch(
-    `/admin/analytics/top_products_by_category/?category=${catId}&range=${range}`
+    `/admin/analytics/top_products_by_category/?category=${catId}&range=${range}`,
   );
 
 export const getLowStockProducts = () => apiFetch(`/products/low_stock/`);

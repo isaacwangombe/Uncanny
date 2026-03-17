@@ -5,7 +5,8 @@
 //     : "http://127.0.0.1:8000";
 export const BACKEND_BASE = window.API_BASE_URL_SHORT;
 
-export const API_BASE = `${BACKEND_BASE}/api`;
+export const API_BASE = `${BACKEND_BASE}`;
+// export const API_BASE = `${BACKEND_BASE}/api`;
 
 export function getCSRFToken() {
   return document.cookie
@@ -86,7 +87,7 @@ function setCache(key, data) {
 export async function apiFetch(
   endpoint,
   options = {},
-  { cacheKey = null } = {}
+  { cacheKey = null } = {},
 ) {
   if (cacheKey) {
     const cached = getCache(cacheKey);
@@ -97,7 +98,7 @@ export async function apiFetch(
   const csrfToken = getCSRFToken();
 
   const isWrite = ["POST", "PUT", "PATCH", "DELETE"].includes(
-    (options.method || "GET").toUpperCase()
+    (options.method || "GET").toUpperCase(),
   );
 
   const headers = {
