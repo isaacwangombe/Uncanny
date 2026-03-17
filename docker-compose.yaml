@@ -31,9 +31,11 @@ services:
       - backend
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./backend/staticfiles:/var/www/static
       - ./backend/media:/var/www/media
+      - /etc/letsencrypt:/etc/letsencrypt:ro
 
 volumes:
   pgdata:
