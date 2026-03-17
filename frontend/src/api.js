@@ -5,8 +5,8 @@
 //     : "http://127.0.0.1:8000";
 export const BACKEND_BASE = window.API_BASE_URL_SHORT;
 
-export const API_BASE = `${BACKEND_BASE}`;
-// export const API_BASE = `${BACKEND_BASE}/api`;
+// export const API_BASE = `${BACKEND_BASE}`;
+export const API_BASE = `${BACKEND_BASE}/api`;
 
 export function getCSRFToken() {
   return document.cookie
